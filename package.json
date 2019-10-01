@@ -1,0 +1,12 @@
+{
+  "name": "VideoGameJS",
+  "version": "1.0.0",
+  "dependencies": {},
+  "devDependencies": {
+    "gulp": "^4.0.2",
+    "gulp-concat": "^2.6.1",
+    "gulp-debug": "^4.0.0",
+    "webpack-stream": "^5.2.1",
+    "path": "^0.12.7"
+  }
+}
