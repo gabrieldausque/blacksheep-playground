@@ -11,7 +11,7 @@ export default class DrawImageBehavior extends Behavior {
         const body = this.components['body'];
         const image = this.components['image'];
 
-        if (typeof element === 'undefined') {
+        if (typeof element === 'undefined' || element === null) {
             element = document.createElement('div');
             element.id = this.id;
             element.style.backgroundImage = 'url(\'' + image.imagePath + '\')';

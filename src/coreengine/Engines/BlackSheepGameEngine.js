@@ -1,6 +1,6 @@
 import "../Helpers/helpers";
 
-class BlackSheepGameEngine{
+export default class BlackSheepGameEngine{
     constructor() {
         this.services = {
             inputs : {}
