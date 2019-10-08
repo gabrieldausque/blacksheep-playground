@@ -29,8 +29,8 @@ window.addEventListener('load', function() {
                 customBehavior.forceLabel = 'playerForces';
                 customBehavior.lastUpdate = Date.now();
                 customBehavior.setUpdateHandler(function (event) {
-                    var theBehavior = this.behaviors['forces'];
-                    var jumpForce = this.components['forces'].getForce('jump');
+                    var theBehavior = this.getBehavior('forces');
+                    var jumpForce = this.getComponent('forces').getForce('jump');
                     if (window.gameEngine.inputs()[" "]) {
                         theBehavior.lastUpdate = Date.now();
                         jumpForce.force.y = Math.max(-10, jumpForce.force.y - 1);

@@ -78,7 +78,7 @@ export default class BlackSheepGameEngine{
             }
             else
             {
-                window.setTimeout(function(){
+                window.gameEngine.gameLoopId = window.setTimeout(function(){
                     window.requestAnimationFrame(window.gameEngine.gameLoop)
                 },1000/60)
             }
@@ -93,7 +93,7 @@ export default class BlackSheepGameEngine{
         console.log("exit !");
         var event = createEvent('gameExit', {});
         document.documentElement.dispatchEvent(event);
-        window.clearInterval(window.gameEngine.gameLoopId);
+        window.clearTimeout(window.gameEngine.gameLoopId);
     }
 }
 

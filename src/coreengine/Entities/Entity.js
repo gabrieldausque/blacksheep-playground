@@ -37,8 +37,14 @@ export default class Entity {
     addBehavior(aBehavior) {
         this.behaviors[aBehavior.name] = aBehavior;
     }
+    getBehavior(behaviorName) {
+        return this.behaviors[behaviorName];
+    }
     addComponent(aComponent) {
         this.components[aComponent.name] = aComponent;
+    }
+    getComponent(componentName) {
+        return this.components[componentName];
     }
     dispose() {
         this.events = undefined;

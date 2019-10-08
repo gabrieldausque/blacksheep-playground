@@ -25,8 +25,24 @@ export default class MoveBehavior extends Behavior {
                 forcesY += forces[forceIndex].force.y;
             }
         }
-        body.x += Math.min(speedx + forcesX, move.maxSpeedX);
-        body.y += Math.min(speedy + forcesY, move.maxSpeedY);
-        this.dispatchEvent('moveEvent',this);
+
+        let toAddX = speedx + forcesX;
+        let toAddY = speedy + forcesY;
+
+        if(toAddX > 0) {
+            toAddX = Math.min(toAddX, move.maxSpeedX);
+        }  else if(toAddX < 0) {
+            toAddX = Math.max(toAddX, -move.maxSpeedX);
+        }
+        body.x += toAddX;
+
+        if(toAddY > 0) {
+            toAddY = Math.min(toAddY, move.maxSpeedY);
+        } else {
+            toAddY = Math.max(toAddY, -move.maxSpeedY);
+        }
+        body.y += toAddY;
+        console.log({ x: toAddX, y: toAddY });
+        this.dispatchEvent('moveEvent',{ x: toAddX, y: toAddY });
     }
 }
