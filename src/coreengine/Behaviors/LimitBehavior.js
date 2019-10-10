@@ -25,18 +25,18 @@ export default class LimitBehavior extends Behavior {
             y:false
         };
 
-        if (x + width > this.components['limits'].left + this.components['limits'].width) {
+        if (x + width >= this.components['limits'].left + this.components['limits'].width) {
             this.components['body'].x = (this.components['limits'].left + this.components['limits'].width) - this.components['body'].width;
             limitResults.x = true;
-        } else if (x < this.components['limits'].left) {
+        } else if (x <= this.components['limits'].left) {
             this.components['body'].x = this.components['limits'].left;
             limitResults.x = true;
         }
 
-        if (y + height > this.components['limits'].top + this.components['limits'].height) {
+        if (y + height >= this.components['limits'].top + this.components['limits'].height) {
             this.components['body'].y = (this.components['limits'].top + this.components['limits'].height) - this.components['body'].height;
             limitResults.y = true;
-        } else if (y < this.components['limits'].top) {
+        } else if (y <= this.components['limits'].top) {
             this.components['body'].y = this.components['limits'].top;
             limitResults.y = true;
         }

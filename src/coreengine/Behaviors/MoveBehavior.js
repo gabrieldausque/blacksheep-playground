@@ -43,6 +43,5 @@ export default class MoveBehavior extends Behavior {
         }
         body.y += toAddY;
         this.dispatchEvent('moveEvent',{ x: toAddX, y: toAddY });
-        console.log({ x: toAddX, y: toAddY });
     }
 }
