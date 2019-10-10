@@ -6,7 +6,10 @@ export default class GravityBehavior extends Behavior {
     }
     update(event) {
         const body = this.components['body'];
+        const move = this.components['move'];
         const forces = this.components['forces'];
-        forces.addForce('gravity', {x:0, y:3*body.weight});
+        const currentGravityForce = forces.getForce('gravity');
+        currentGravityForce.force.y = Math.min(currentGravityForce.force.y + body.weight, move.maxSpeedY);
+        //forces.addForce('gravity', currentGravityForce.force);
     }
 }

@@ -42,7 +42,7 @@ export default class MoveBehavior extends Behavior {
             toAddY = Math.max(toAddY, -move.maxSpeedY);
         }
         body.y += toAddY;
-        console.log({ x: toAddX, y: toAddY });
         this.dispatchEvent('moveEvent',{ x: toAddX, y: toAddY });
+        console.log({ x: toAddX, y: toAddY });
     }
 }

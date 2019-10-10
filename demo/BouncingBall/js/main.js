@@ -28,10 +28,21 @@ class LimitReboundWithElasticity extends BlacksheepGameEngine.LimitBehavior {
 
     getEnergy(moveEventArg) {
         const elasticityComponent = this.getComponent('elasticity');
+        const moveComponent = this.getComponent('move');
+
         elasticityComponent.energy.x += moveEventArg.x;
-        if(moveEventArg.y > 0)
-            elasticityComponent.energy.y += moveEventArg.y;
-        console.log('energy : ' + elasticityComponent.energy.y);
+        elasticityComponent.energy.y += moveEventArg.y;
+
+        if(elasticityComponent.energy.x < 0) {
+            elasticityComponent.energy.x = Math.max(-moveComponent.maxSpeedX * elasticityComponent.elasticity, elasticityComponent.energy.x);
+        } else {
+            elasticityComponent.energy.x = Math.min(elasticityComponent.energy.x, moveComponent.maxSpeedX * elasticityComponent.elasticity);
+        }
+        if(elasticityComponent.energy.y < 0) {
+            elasticityComponent.energy.y = Math.max(-moveComponent.maxSpeedY * elasticityComponent.elasticity, elasticityComponent.energy.y);
+        } else {
+            elasticityComponent.energy.y = Math.min(elasticityComponent.energy.y, moveComponent.maxSpeedY * elasticityComponent.elasticity);
+        }
     }
 
     update(eventArg) {
@@ -39,33 +50,30 @@ class LimitReboundWithElasticity extends BlacksheepGameEngine.LimitBehavior {
         const forcesComponent = this.getComponent('forces');
         const elasticityComponent = this.getComponent('elasticity');
         const reboundForce = forcesComponent.getForce('rebound');
-        console.log(reboundForce.force.y);
 
-        if(limitCollision.x || limitCollision.y && reboundForce.force.y === 0 ) {
-            let reboundForceValueY = 0;
-            let reboundForceValueX = 0;
+        if((limitCollision.y && reboundForce.force.y === 0) || (limitCollision.x && reboundForce.force.x === 0)) {
+            let reboundForceValueY = reboundForce.force.y;
+            let reboundForceValueX = reboundForce.force.x;
 
             if(limitCollision.y) {
-                reboundForceValueY = - elasticityComponent.energy.y * elasticityComponent.elasticity;
-                elasticityComponent.energy.y = 0;
+                reboundForceValueY = -elasticityComponent.energy.y;
             }
 
             if(limitCollision.x) {
-                reboundForceValueX = elasticityComponent.energy.x * 2;
-                elasticityComponent.energy.x = 0;
+                reboundForceValueX = -elasticityComponent.energy.x;
             }
-
+            const force = {x: reboundForceValueX, y:reboundForceValueY};
             forcesComponent.addForce('rebound', {x: reboundForceValueX, y:reboundForceValueY});
             return;
         }
 
         if(reboundForce && (reboundForce.force.x !== 0 || reboundForce.force.y !== 0)) {
-            if(reboundForce.force.y !== 0) {
-                reboundForce.force.y = Math.round(reboundForce.force.y/2);
+            if(reboundForce.force.y < 0) {
+                reboundForce.force.y += 1;
             }
 
             if(reboundForce.force.x !== 0) {
-                reboundForce.force.x = reboundForce.force.x /2;
+                reboundForce.force.x -= 1;
             }
         }
     }
@@ -75,12 +83,12 @@ class Ball extends BlacksheepGameEngine.Entity {
     constructor() {
         super();
         this.addComponent(new BlacksheepGameEngine.BodyComponent(512,0,0,48,48,3));
-        this.addComponent(new BlacksheepGameEngine.MoveComponent(0,0,15,15));
+        this.addComponent(new BlacksheepGameEngine.MoveComponent(1,0,30,30));
         this.addComponent(new BlacksheepGameEngine.ImageComponent('img/Soccer_ball.svg' ));
         this.addComponent(new BlacksheepGameEngine.LimitComponent(0,0,1024,768));
         this.addComponent(new BlacksheepGameEngine.ForcesComponent());
 
-        this.addComponent(new Elasticity(0.9));
+        this.addComponent(new Elasticity(2));
 
         this.addBehavior(new BlacksheepGameEngine.DrawImageBehavior(this));
         this.addBehavior(new BlacksheepGameEngine.GravityBehavior(this));
