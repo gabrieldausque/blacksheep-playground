@@ -9,10 +9,17 @@ export default class Ball extends BlacksheepGameEngine.Entity {
         this.addComponent(new BlacksheepGameEngine.LimitComponent(0,0,1024,768));
         this.addComponent(new BlacksheepGameEngine.ForcesComponent());
         this.addComponent(new BlacksheepGameEngine.ElasticityComponent(2));
+        this.addComponent(new BlacksheepGameEngine.CSSComponent({
+            animationName : 'spin',
+            animationDuration : '2s',
+            animationIterationCount : 'infinite',
+            animationTimingFunction : 'linear'
+        }));
 
         this.addBehavior(new BlacksheepGameEngine.DrawImageBehavior(this));
         this.addBehavior(new BlacksheepGameEngine.GravityBehavior(this));
         this.addBehavior(new BlacksheepGameEngine.LimitReboundWithElasticityBehavior(this));
         this.addBehavior(new BlacksheepGameEngine.MoveBehavior(this));
+
     }
 }
