@@ -1,4 +1,4 @@
-import * as BlacksheepGameEngine from  "../../../../dist/blacksheepgameengine-build.js";
+import * as BlacksheepGameEngine from  "../blacksheepgameengine-build.js";
 
 export default class Ball extends BlacksheepGameEngine.Entity {
     constructor() {
