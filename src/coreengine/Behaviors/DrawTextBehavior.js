@@ -6,10 +6,10 @@ export default class DrawTextBehavior
         super('drawer', entity);
         this.entity.addEventListener('gameDraw', this.draw);
     }
-    draw(event) {
-        event.ctx.font = "50px Arial";
-        event.ctx.textAlign = "center";
-        event.ctx.fillText(this.components['text'].text,
+    draw(eventArgs) {
+        eventArgs.ctx.font = "50px Arial";
+        eventArgs.ctx.textAlign = "center";
+        eventArgs.ctx.fillText(eventArgs.currentEntity.components['text'].text,
             512,50);
     };
 }

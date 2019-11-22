@@ -6,10 +6,10 @@ export default class SpecificAnimationBehavior extends Behavior {
         this.lastUpdate = Date.now();
         this.xSpeed = 1;
     }
-    update(event) {
-        const animator = this.behaviors['animator'];
+    update(eventArgs) {
+        const animator = eventArgs.currentEntity.getBehavior('animator');
         if(Date.now() - animator.lastUpdate > 125 ) {
-            const image = this.components['image'];
+            const image = eventArgs.currentEntity.components['image'];
             if(animator.xSpeed > 0) {
                 if (image.currentImage.x < image.numberOfColumns - 1) {
                     image.currentImage.x++;

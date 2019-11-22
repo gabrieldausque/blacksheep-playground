@@ -5,20 +5,20 @@ export default class ColliderBoundBehavior extends Behavior {
         super('collider', entity);
         entity.addEventListener('collision', this.onCollision);
     }
-    onCollision(collisionEvent) {
-        if (Date.now() - this.components['collision'].lastCollision > 150) {
-            const body = this.components['body'];
-            const collidedBody = collisionEvent.collided.components['body'];
-            this.components['collision'].lastCollision = Date.now();
+    onCollision(eventArgs) {
+        if (Date.now() - eventArgs.currentEntity.components['collision'].lastCollision > 150) {
+            const body = eventArgs.currentEntity.components['body'];
+            const collidedBody = eventArgs.collided.components['body'];
+            eventArgs.currentEntity.components['collision'].lastCollision = Date.now();
             if(body.barycentre().y <= collidedBody.y ||
                 body.barycentre().y >= collidedBody.y + collidedBody.height) {
-                this.components['move'].speedy = -(this.components['move'].speedy);
+                eventArgs.currentEntity.components['move'].speedy = -(eventArgs.currentEntity.components['move'].speedy);
             } else if(body.barycentre().x <= collidedBody.x ||
                       body.barycentre().x >= collidedBody.x + collidedBody.width) {
-                this.components['move'].speedx = -(this.components['move'].speedx);
+                eventArgs.currentEntity.components['move'].speedx = -(eventArgs.currentEntity.components['move'].speedx);
             } else {
-                this.components['move'].speedy = -(this.components['move'].speedy);
-                this.components['move'].speedx = -(this.components['move'].speedx);
+                eventArgs.currentEntity.components['move'].speedy = -(eventArgs.currentEntity.components['move'].speedy);
+                eventArgs.currentEntity.components['move'].speedx = -(eventArgs.currentEntity.components['move'].speedx);
             }
         }
     }

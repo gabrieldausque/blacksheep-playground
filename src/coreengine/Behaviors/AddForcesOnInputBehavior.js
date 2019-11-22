@@ -4,8 +4,8 @@ class AddForcesOnInputBehavior extends Behavior {
     constructor(entity) {
         super('AddForcesOnInput');
     }
-    update(event) {
-        var forcesbyinput = this.components['forcesbyinput'];
+    update(eventArgs) {
+        var forcesbyinput = eventArg.currentEntity.components['forcesbyinput'];
         // TODO: check the usage of this beahvior to finish it
     }
 }

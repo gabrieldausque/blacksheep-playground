@@ -175,8 +175,8 @@ export  class Behavior {
         this.entity = entity;
         this.entity.addEventListener('gameUpdate', this.update);
     }
-    update(event) {}
-    draw(event) {}
+    update(eventArgs) {}
+    draw(eventArgs) {}
     setUpdateHandler(updateHandler) {
         this.entity.removeEventListener('gameUpdate', this.update);
         this.update = updateHandler;
@@ -188,8 +188,8 @@ class AddForcesOnInputBehavior extends Behavior {
     constructor(entity) {
         super('AddForcesOnInput');
     }
-    update(event) {
-        var forcesbyinput = this.components['forcesbyinput'];
+    update(eventArgs) {
+        var forcesbyinput = eventArg.currentEntity.components['forcesbyinput'];
         // TODO: check the usage of this beahvior to finish it
     }
 }
@@ -199,20 +199,20 @@ export  class ColliderBoundBehavior extends Behavior {
         super('collider', entity);
         entity.addEventListener('collision', this.onCollision);
     }
-    onCollision(collisionEvent) {
-        if (Date.now() - this.components['collision'].lastCollision > 150) {
-            const body = this.components['body'];
-            const collidedBody = collisionEvent.collided.components['body'];
-            this.components['collision'].lastCollision = Date.now();
+    onCollision(eventArgs) {
+        if (Date.now() - eventArgs.currentEntity.components['collision'].lastCollision > 150) {
+            const body = eventArgs.currentEntity.components['body'];
+            const collidedBody = eventArgs.collided.components['body'];
+            eventArgs.currentEntity.components['collision'].lastCollision = Date.now();
             if(body.barycentre().y <= collidedBody.y ||
                 body.barycentre().y >= collidedBody.y + collidedBody.height) {
-                this.components['move'].speedy = -(this.components['move'].speedy);
+                eventArgs.currentEntity.components['move'].speedy = -(eventArgs.currentEntity.components['move'].speedy);
             } else if(body.barycentre().x <= collidedBody.x ||
                       body.barycentre().x >= collidedBody.x + collidedBody.width) {
-                this.components['move'].speedx = -(this.components['move'].speedx);
+                eventArgs.currentEntity.components['move'].speedx = -(eventArgs.currentEntity.components['move'].speedx);
             } else {
-                this.components['move'].speedy = -(this.components['move'].speedy);
-                this.components['move'].speedx = -(this.components['move'].speedx);
+                eventArgs.currentEntity.components['move'].speedy = -(eventArgs.currentEntity.components['move'].speedy);
+                eventArgs.currentEntity.components['move'].speedx = -(eventArgs.currentEntity.components['move'].speedx);
             }
         }
     }
@@ -223,15 +223,15 @@ class DrawCSSBehavior extends Behavior {
         super('drawer', entity);
         this.entity.addEventListener('gameDraw', this.draw);
     }
-    draw(event) {
-        var display = document.getElementById('display');
-        var element = document.getElementById(this.id);
-        var body = this.components['body'];
-        var css = this.components['css'];
+    draw(eventArgs) {
+        let display = document.getElementById('display');
+        let element = document.getElementById(this.entity.id);
+        let body = eventArgs.currentEntity.components['body'];
+        let css = eventArgs.currentEntity.components['css'];
 
         if(!element) {
             element = document.createElement('div');
-            element.id = this.id;
+            element.id = this.entity.id;
             element.style.background = css.cssBackgroundText;
             element.style.zIndex = body.z;
             element.style.width = body.width + "px";
@@ -251,14 +251,14 @@ export  class DrawImageBehavior extends Behavior {
         this.entity.addEventListener('gameDraw', this.draw);
     }
 
-    draw(event) {
+    draw(eventArgs) {
         const display = document.getElementById('display');
-        let element = document.getElementById(this.id);
-        const body = this.components['body'];
-        const image = this.components['image'];
-        const drawer = this.getBehavior('drawer');
+        let element = document.getElementById(eventArgs.currentEntity.id);
+        const body = eventArgs.currentEntity.components['body'];
+        const image = eventArgs.currentEntity.components['image'];
+        const drawer = eventArgs.currentEntity.getBehavior('drawer');
         if (typeof element === 'undefined' || element === null) {
-            element = drawer.createElement(this, image, body, display);
+            element = drawer.createElement(eventArgs.currentEntity, image, body, display);
         }
         drawer.moveImage(element, image, body);
     }
@@ -314,10 +314,10 @@ export  class DrawTextBehavior
         super('drawer', entity);
         this.entity.addEventListener('gameDraw', this.draw);
     }
-    draw(event) {
-        event.ctx.font = "50px Arial";
-        event.ctx.textAlign = "center";
-        event.ctx.fillText(this.components['text'].text,
+    draw(eventArgs) {
+        eventArgs.ctx.font = "50px Arial";
+        eventArgs.ctx.textAlign = "center";
+        eventArgs.ctx.fillText(eventArgs.currentEntity.components['text'].text,
             512,50);
     };
 }
@@ -326,13 +326,12 @@ export  class GravityBehavior extends Behavior {
     constructor(entity) {
         super('gravitor',entity)
     }
-    update(event) {
-        const body = this.components['body'];
-        const move = this.components['move'];
-        const forces = this.components['forces'];
+    update(eventArgs) {
+        const body = eventArgs.currentEntity.components['body'];
+        const move = eventArgs.currentEntity.components['move'];
+        const forces = eventArgs.currentEntity.components['forces'];
         const currentGravityForce = forces.getForce('gravity');
         currentGravityForce.force.y = Math.min(currentGravityForce.force.y + body.weight, move.maxSpeedY);
-        //forces.addForce('gravity', currentGravityForce.force);
     }
 }
 
@@ -344,36 +343,36 @@ export  class LimitBehavior extends Behavior {
         super(name, entity);
     }
 
-    update(event) {
-        const limitCollision = LimitBehavior.prototype.getLimitCollision.call(this);
+    update(eventArgs) {
+        const limitCollision = super.getLimitCollision(eventArgs.currentEntity);
         if(limitCollision.x || limitCollision.y) {
-            this.dispatchEvent('limitCollision', limitCollision);
+            eventArgs.currentEntity.dispatchEvent('limitCollision', limitCollision);
         }
     }
 
-    getLimitCollision() {
-        const x = this.components['body'].x;
-        const y = this.components['body'].y;
-        const width = this.components['body'].width;
-        const height = this.components['body'].height;
+    getLimitCollision(entity) {
+        const x = entity.components['body'].x;
+        const y = entity.components['body'].y;
+        const width = entity.components['body'].width;
+        const height = entity.components['body'].height;
         const limitResults = {
             x:false,
             y:false
         };
 
-        if (x + width >= this.components['limits'].left + this.components['limits'].width) {
-            this.components['body'].x = (this.components['limits'].left + this.components['limits'].width) - this.components['body'].width;
+        if (x + width >= entity.components['limits'].left + entity.components['limits'].width) {
+            entity.components['body'].x = (entity.components['limits'].left + entity.components['limits'].width) - entity.components['body'].width;
             limitResults.x = true;
-        } else if (x <= this.components['limits'].left) {
-            this.components['body'].x = this.components['limits'].left;
+        } else if (x <= entity.components['limits'].left) {
+            entity.components['body'].x = entity.components['limits'].left;
             limitResults.x = true;
         }
 
-        if (y + height >= this.components['limits'].top + this.components['limits'].height) {
-            this.components['body'].y = (this.components['limits'].top + this.components['limits'].height) - this.components['body'].height;
+        if (y + height >= entity.components['limits'].top + entity.components['limits'].height) {
+            entity.components['body'].y = (entity.components['limits'].top + entity.components['limits'].height) - entity.components['body'].height;
             limitResults.y = true;
-        } else if (y <= this.components['limits'].top) {
-            this.components['body'].y = this.components['limits'].top;
+        } else if (y <= entity.components['limits'].top) {
+            entity.components['body'].y = entity.components['limits'].top;
             limitResults.y = true;
         }
 
@@ -385,13 +384,13 @@ export  class LimitBoundBehavior extends LimitBehavior {
     constructor(entity){
         super('limitBounder',entity);
     }
-    update(event) {
-        const rebound = super.getLimitCollision.call(this);
+    update(eventArgs) {
+        const rebound = super.getLimitCollision.call(eventArgs.currentEntity);
         if(rebound.x) {
-            this.components['move'].speedx = -(this.components['move'].speedx);
+            eventArgs.currentEntity.components['move'].speedx = -(eventArgs.currentEntity.components['move'].speedx);
         }
         if(rebound.y) {
-            this.components['move'].speedy = -(this.components['move'].speedy);
+            eventArgs.currentEntity.components['move'].speedy = -(eventArgs.currentEntity.components['move'].speedy);
         }
     }
 }
@@ -400,11 +399,11 @@ class LimitDeathBehavior extends Behavior {
     constructor(entity) {
         super('limitDeath',entity);
     }
-    update(event){
-        const rebound = super.getLimitCollision.call(this);
+    update(eventArgs){
+        const rebound = super.getLimitCollision(eventArgs.currentEntity);
         if (rebound.x || rebound.y)
         {
-            this.dispatchEvent('death', this);
+            eventArgs.currentEntity.dispatchEvent('death', this);
         }
     }
 }
@@ -416,9 +415,9 @@ export  class LimitReboundWithElasticityBehavior extends LimitBehavior {
         entity.addEventListener('moveEvent', this.checkLimits);
     }
 
-    checkLimits(moveEventArg) {
-        const bodyComponent = this.getComponent('body');
-        const limitComponent = this.getComponent('limits');
+    checkLimits(eventArgs) {
+        const bodyComponent = eventArgs.currentEntity.getComponent('body');
+        const limitComponent = eventArgs.currentEntity.getComponent('limits');
         if(bodyComponent.y < limitComponent.top) {
             bodyComponent.y = limitComponent.top;
         } else if (bodyComponent.y + bodyComponent.height > limitComponent.top + limitComponent.height) {
@@ -426,10 +425,10 @@ export  class LimitReboundWithElasticityBehavior extends LimitBehavior {
         }
     }
 
-    getEnergy(moveEventArg) {
-        const elasticityComponent = this.getComponent('elasticity');
-        const moveComponent = this.getComponent('move');
-        const forcesComponent = this.getComponent('forces');
+    getEnergy(eventArgs) {
+        const elasticityComponent = eventArgs.currentEntity.getComponent('elasticity');
+        const moveComponent = eventArgs.currentEntity.getComponent('move');
+        const forcesComponent = eventArgs.currentEntity.getComponent('forces');
 
         for(let namedForceIndex in forcesComponent.forces) {
             let namedForce = forcesComponent.forces[namedForceIndex];
@@ -451,11 +450,11 @@ export  class LimitReboundWithElasticityBehavior extends LimitBehavior {
         }
     }
 
-    update(eventArg) {
-        const limitCollision = super.getLimitCollision.call(this);
-        const forcesComponent = this.getComponent('forces');
-        const elasticityComponent = this.getComponent('elasticity');
-        const moveComponent = this.getComponent('move');
+    update(eventArgs) {
+        const limitCollision = super.getLimitCollision(eventArgs.currentEntity);
+        const forcesComponent = eventArgs.currentEntity.getComponent('forces');
+        const elasticityComponent = eventArgs.currentEntity.getComponent('elasticity');
+        const moveComponent = eventArgs.currentEntity.getComponent('move');
         const reboundForce = forcesComponent.getForce('rebound');
 
         if(limitCollision.y && reboundForce.force.y === 0) {
@@ -482,22 +481,22 @@ export  class MoveBehavior extends Behavior {
     constructor(entity) {
         super('mover', entity);
     }
-    update(event) {
-        const body = this.components['body'];
+    update(eventArgs) {
+        const body = eventArgs.currentEntity.components['body'];
         const x = body.x;
         const y = body.y;
         const width = body.width;
         const height = body.height;
 
-        const move = this.components['move'];
+        const move = eventArgs.currentEntity.components['move'];
         const speedx = move.speedx;
         const speedy = move.speedy;
 
         let forcesX = 0;
         let forcesY = 0;
 
-        if(typeof this.components['forces'] !== 'undefined') {
-            let forces = this.components['forces'].forces;
+        if(typeof eventArgs.currentEntity.components['forces'] !== 'undefined') {
+            let forces = eventArgs.currentEntity.components['forces'].forces;
             for (let forceIndex = 0; forceIndex < forces.length; forceIndex++) {
                 forcesX += forces[forceIndex].force.x;
                 forcesY += forces[forceIndex].force.y;
@@ -520,7 +519,7 @@ export  class MoveBehavior extends Behavior {
             toAddY = Math.max(toAddY, -move.maxSpeedY);
         }
         body.y += toAddY;
-        this.dispatchEvent('moveEvent',{ x: toAddX, y: toAddY });
+        eventArgs.currentEntity.dispatchEvent('moveEvent',{ x: toAddX, y: toAddY });
     }
 }
 
@@ -530,10 +529,10 @@ export  class SpecificAnimationBehavior extends Behavior {
         this.lastUpdate = Date.now();
         this.xSpeed = 1;
     }
-    update(event) {
-        const animator = this.behaviors['animator'];
+    update(eventArgs) {
+        const animator = eventArgs.currentEntity.getBehavior('animator');
         if(Date.now() - animator.lastUpdate > 125 ) {
-            const image = this.components['image'];
+            const image = eventArgs.currentEntity.components['image'];
             if(animator.xSpeed > 0) {
                 if (image.currentImage.x < image.numberOfColumns - 1) {
                     image.currentImage.x++;
@@ -564,10 +563,10 @@ export  class StandardAnimationBehavior extends Behavior {
         super('animator', entity);
         this.lastUpdate = Date.now();
     }
-    update(event) {
-        const animator = this.behaviors['animator'];
+    update(eventArgs) {
+        const animator = eventArgs.currentEntity.getBehavior('animator');
         if(Date.now() - animator.lastUpdate > 125 ) {
-            const image = this.components['image'];
+            const image = eventArgs.currentEntity.components['image'];
             if (image.currentImage.x < image.numberOfColumns - 1) {
                 image.currentImage.x++;
             } else if(image.currentImage.y < image.numberOfRows - 1) {
@@ -612,7 +611,14 @@ export  class Entity {
             for(var handlerCount=0;handlerCount < handlers.length;handlerCount++)
             {
                 if(handlers[handlerCount] !== undefined) {
-                    handlers[handlerCount].call(this, eventArg);
+                    if(typeof eventArg !== "undefined" && eventArg !== null) {
+                        eventArg.currentEntity = this;
+                    } else {
+                        eventArg = {
+                            currentEntity : this
+                        };
+                    }
+                    handlers[handlerCount](eventArg);
                 }
             }
         }

@@ -5,10 +5,10 @@ export default class StandardAnimationBehavior extends Behavior {
         super('animator', entity);
         this.lastUpdate = Date.now();
     }
-    update(event) {
-        const animator = this.behaviors['animator'];
+    update(eventArgs) {
+        const animator = eventArgs.currentEntity.getBehavior('animator');
         if(Date.now() - animator.lastUpdate > 125 ) {
-            const image = this.components['image'];
+            const image = eventArgs.currentEntity.components['image'];
             if (image.currentImage.x < image.numberOfColumns - 1) {
                 image.currentImage.x++;
             } else if(image.currentImage.y < image.numberOfRows - 1) {

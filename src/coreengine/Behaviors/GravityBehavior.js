@@ -4,12 +4,11 @@ export default class GravityBehavior extends Behavior {
     constructor(entity) {
         super('gravitor',entity)
     }
-    update(event) {
-        const body = this.components['body'];
-        const move = this.components['move'];
-        const forces = this.components['forces'];
+    update(eventArgs) {
+        const body = eventArgs.currentEntity.components['body'];
+        const move = eventArgs.currentEntity.components['move'];
+        const forces = eventArgs.currentEntity.components['forces'];
         const currentGravityForce = forces.getForce('gravity');
         currentGravityForce.force.y = Math.min(currentGravityForce.force.y + body.weight, move.maxSpeedY);
-        //forces.addForce('gravity', currentGravityForce.force);
     }
 }

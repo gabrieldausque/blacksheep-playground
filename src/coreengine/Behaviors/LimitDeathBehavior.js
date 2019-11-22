@@ -4,11 +4,11 @@ class LimitDeathBehavior extends Behavior {
     constructor(entity) {
         super('limitDeath',entity);
     }
-    update(event){
-        const rebound = super.getLimitCollision.call(this);
+    update(eventArgs){
+        const rebound = super.getLimitCollision(eventArgs.currentEntity);
         if (rebound.x || rebound.y)
         {
-            this.dispatchEvent('death', this);
+            eventArgs.currentEntity.dispatchEvent('death', this);
         }
     }
 }

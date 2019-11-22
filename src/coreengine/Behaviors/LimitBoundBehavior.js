@@ -4,13 +4,13 @@ export default class LimitBoundBehavior extends LimitBehavior {
     constructor(entity){
         super('limitBounder',entity);
     }
-    update(event) {
-        const rebound = super.getLimitCollision.call(this);
+    update(eventArgs) {
+        const rebound = super.getLimitCollision.call(eventArgs.currentEntity);
         if(rebound.x) {
-            this.components['move'].speedx = -(this.components['move'].speedx);
+            eventArgs.currentEntity.components['move'].speedx = -(eventArgs.currentEntity.components['move'].speedx);
         }
         if(rebound.y) {
-            this.components['move'].speedy = -(this.components['move'].speedy);
+            eventArgs.currentEntity.components['move'].speedy = -(eventArgs.currentEntity.components['move'].speedy);
         }
     }
 }

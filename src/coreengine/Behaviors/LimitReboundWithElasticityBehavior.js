@@ -7,9 +7,9 @@ export default class LimitReboundWithElasticityBehavior extends LimitBehavior {
         entity.addEventListener('moveEvent', this.checkLimits);
     }
 
-    checkLimits(moveEventArg) {
-        const bodyComponent = this.getComponent('body');
-        const limitComponent = this.getComponent('limits');
+    checkLimits(eventArgs) {
+        const bodyComponent = eventArgs.currentEntity.getComponent('body');
+        const limitComponent = eventArgs.currentEntity.getComponent('limits');
         if(bodyComponent.y < limitComponent.top) {
             bodyComponent.y = limitComponent.top;
         } else if (bodyComponent.y + bodyComponent.height > limitComponent.top + limitComponent.height) {
@@ -17,10 +17,10 @@ export default class LimitReboundWithElasticityBehavior extends LimitBehavior {
         }
     }
 
-    getEnergy(moveEventArg) {
-        const elasticityComponent = this.getComponent('elasticity');
-        const moveComponent = this.getComponent('move');
-        const forcesComponent = this.getComponent('forces');
+    getEnergy(eventArgs) {
+        const elasticityComponent = eventArgs.currentEntity.getComponent('elasticity');
+        const moveComponent = eventArgs.currentEntity.getComponent('move');
+        const forcesComponent = eventArgs.currentEntity.getComponent('forces');
 
         for(let namedForceIndex in forcesComponent.forces) {
             let namedForce = forcesComponent.forces[namedForceIndex];
@@ -42,11 +42,11 @@ export default class LimitReboundWithElasticityBehavior extends LimitBehavior {
         }
     }
 
-    update(eventArg) {
-        const limitCollision = super.getLimitCollision.call(this);
-        const forcesComponent = this.getComponent('forces');
-        const elasticityComponent = this.getComponent('elasticity');
-        const moveComponent = this.getComponent('move');
+    update(eventArgs) {
+        const limitCollision = super.getLimitCollision(eventArgs.currentEntity);
+        const forcesComponent = eventArgs.currentEntity.getComponent('forces');
+        const elasticityComponent = eventArgs.currentEntity.getComponent('elasticity');
+        const moveComponent = eventArgs.currentEntity.getComponent('move');
         const reboundForce = forcesComponent.getForce('rebound');
 
         if(limitCollision.y && reboundForce.force.y === 0) {

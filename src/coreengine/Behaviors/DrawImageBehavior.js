@@ -6,14 +6,14 @@ export default class DrawImageBehavior extends Behavior {
         this.entity.addEventListener('gameDraw', this.draw);
     }
 
-    draw(event) {
+    draw(eventArgs) {
         const display = document.getElementById('display');
-        let element = document.getElementById(this.id);
-        const body = this.components['body'];
-        const image = this.components['image'];
-        const drawer = this.getBehavior('drawer');
+        let element = document.getElementById(eventArgs.currentEntity.id);
+        const body = eventArgs.currentEntity.components['body'];
+        const image = eventArgs.currentEntity.components['image'];
+        const drawer = eventArgs.currentEntity.getBehavior('drawer');
         if (typeof element === 'undefined' || element === null) {
-            element = drawer.createElement(this, image, body, display);
+            element = drawer.createElement(eventArgs.currentEntity, image, body, display);
         }
         drawer.moveImage(element, image, body);
     }

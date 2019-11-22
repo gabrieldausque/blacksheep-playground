@@ -4,8 +4,8 @@ export default class Behavior {
         this.entity = entity;
         this.entity.addEventListener('gameUpdate', this.update);
     }
-    update(event) {}
-    draw(event) {}
+    update(eventArgs) {}
+    draw(eventArgs) {}
     setUpdateHandler(updateHandler) {
         this.entity.removeEventListener('gameUpdate', this.update);
         this.update = updateHandler;

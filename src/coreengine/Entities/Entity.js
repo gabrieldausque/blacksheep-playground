@@ -29,7 +29,14 @@ export default class Entity {
             for(var handlerCount=0;handlerCount < handlers.length;handlerCount++)
             {
                 if(handlers[handlerCount] !== undefined) {
-                    handlers[handlerCount].call(this, eventArg);
+                    if(typeof eventArg !== "undefined" && eventArg !== null) {
+                        eventArg.currentEntity = this;
+                    } else {
+                        eventArg = {
+                            currentEntity : this
+                        };
+                    }
+                    handlers[handlerCount](eventArg);
                 }
             }
         }

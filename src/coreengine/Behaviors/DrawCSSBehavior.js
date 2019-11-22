@@ -5,15 +5,15 @@ class DrawCSSBehavior extends Behavior {
         super('drawer', entity);
         this.entity.addEventListener('gameDraw', this.draw);
     }
-    draw(event) {
-        var display = document.getElementById('display');
-        var element = document.getElementById(this.id);
-        var body = this.components['body'];
-        var css = this.components['css'];
+    draw(eventArgs) {
+        let display = document.getElementById('display');
+        let element = document.getElementById(this.entity.id);
+        let body = eventArgs.currentEntity.components['body'];
+        let css = eventArgs.currentEntity.components['css'];
 
         if(!element) {
             element = document.createElement('div');
-            element.id = this.id;
+            element.id = this.entity.id;
             element.style.background = css.cssBackgroundText;
             element.style.zIndex = body.z;
             element.style.width = body.width + "px";
