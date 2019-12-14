@@ -1,6 +1,6 @@
 import * as BlackSheepGameEngine from "./blacksheepgameengine-build.js";
 
-class DrawImageWithSinusoid extends BlackSheepGameEngine.DrawImageBehavior {
+export class DrawImageWithSinusoidBehavior extends BlackSheepGameEngine.DrawImageBehavior {
     constructor(entity) {
         super(entity)
     }
@@ -14,12 +14,21 @@ class DrawImageWithSinusoid extends BlackSheepGameEngine.DrawImageBehavior {
         element.style.height = body.height + "px";
         element.style.position = "absolute";
 
-        for(let rowIndex = 0; rowIndex < 2; rowIndex++) {
+        const rowCount = 10;
+        for(let rowIndex = 0; rowIndex < rowCount; rowIndex++) {
+            let delay = Math.sin(rowIndex);
+        
             let rowElement = document.createElement('div');
-            rowElement.style.height = body.height/2 + "px";
+        
+            rowElement.style.height = body.height/rowCount + "px";
             rowElement.style.width = body.width + "px";
+            rowElement.style.backgroundImage = 'url(\'' + image.imagePath + '\')';
+            rowElement.style.backgroundPositionX = image.currentImage.x * body.width + "px";
+            rowElement.style.backgroundPositionY = -((image.currentImage.y * body.height) + 
+                                                    (body.height/rowCount)*rowIndex) + "px";
+            rowElement.style['animation'] = '1s sinusoid '+ delay + 's linear infinite';
             
-            element.appendChild(rowIndex);
+            element.appendChild(rowElement);
         }
 
         let css = entity.components['css'];
@@ -52,12 +61,12 @@ class DrawImageWithSinusoid extends BlackSheepGameEngine.DrawImageBehavior {
     }
 }
 
-export default class Tentacles extends BlackSheepGameEngine.Entity {
+export class Tentacles extends BlackSheepGameEngine.Entity {
     constructor() {
         super();
         this.addComponent(new BlackSheepGameEngine.BodyComponent(0,0,0,1024,768,3));
         this.addComponent(new BlackSheepGameEngine.ImageComponent('imgs/tentacle.jpg'));
         
-        this.addBehavior(new BlackSheepGameEngine.DrawImageBehavior(this));
+        this.addBehavior(new DrawImageWithSinusoidBehavior(this));
     }
 }

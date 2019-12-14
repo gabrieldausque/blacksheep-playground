@@ -1,9 +1,9 @@
 import * as BlackSheepGameEngine from "./blacksheepgameengine-build.js"
-import Tentacles from "./Tentacles.js";
+import * as TentaclesClass from "./Tentacles.js";
 
 window.gameEngine = new BlackSheepGameEngine.BlackSheepGameEngine();
 document.documentElement.addEventListener('gameInit', function() {
-    gameEngine.addEntity(new Tentacles());
+    gameEngine.addEntity(new TentaclesClass.Tentacles());
 });
 
 window.addEventListener('load', function() {
