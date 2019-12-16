@@ -11,7 +11,7 @@ export class Tentacles extends BlackSheepGameEngine.Entity {
             100,
             1, 
             'sinusoid', 
-            function(rowCount, colCount) { return rowCount * 100}, 
+            function(rowCount, colCount) { return - rowCount * 100}, 
             3
             )
         );
