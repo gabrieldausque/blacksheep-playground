@@ -9,12 +9,18 @@
             "request": "launch",
             "name": "Demo BouncingBall",
             "url":"http://localhost:5500/demo/BouncingBall/"
-        }
+        },
         {
             "type": "chrome",
             "request": "launch",
             "name": "Demo Deformations",
             "url":"http://localhost:5500/demo/Deformations/"
+        },
+        {
+            "type": "chrome",
+            "request": "launch",
+            "name": "Demo Platformer",
+            "url":"http://localhost:5500/demo/Platformer/"
         }
     ]
 }

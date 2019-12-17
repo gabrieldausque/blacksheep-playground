@@ -1,19 +1,19 @@
 import Behavior from "./Behavior";
 
-class DrawCSSBehavior extends Behavior {
+export class DrawCSSBehavior extends Behavior {
     constructor(entity) {
         super('drawer', entity);
         this.entity.addEventListener('gameDraw', this.draw);
     }
     draw(eventArgs) {
         let display = document.getElementById('display');
-        let element = document.getElementById(this.entity.id);
+        let element = document.getElementById(eventArgs.currentEntity.id);
         let body = eventArgs.currentEntity.components['body'];
         let css = eventArgs.currentEntity.components['css'];
 
         if(!element) {
             element = document.createElement('div');
-            element.id = this.entity.id;
+            element.id = eventArgs.currentEntity.id;
             element.style.background = css.cssBackgroundText;
             element.style.zIndex = body.z;
             element.style.width = body.width + "px";
