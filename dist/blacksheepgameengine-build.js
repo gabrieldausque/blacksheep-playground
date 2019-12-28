@@ -234,14 +234,14 @@ export class DrawCSSBehavior extends Behavior {
             element.id = eventArgs.currentEntity.id;
             element.style.background = css.cssBackgroundText;
             element.style.zIndex = body.z;
-            element.style.width = body.width + "px";
-            element.style.height = body.height + "px";
-            element.style.position = "absolute";
+            element.style.width = body.width + 'px';
+            element.style.height = body.height + 'px';
+            element.style.position = 'absolute';
             element.style.cssText += css.otherCssText;
             display.appendChild(element);
         }
-        element.style.top = body.y + "px";
-        element.style.left = body.x + "px";
+        element.style.top = body.y + 'px';
+        element.style.left = body.x + 'px';
     }
 }
 
@@ -663,29 +663,32 @@ export  class Entity {
         this.behaviors = {};
     }
     addEventListener(eventName, eventHandler) {
-      if(this.events[eventName] === undefined) {
-          this.events[eventName] = [];
-      }
-      this.events[eventName].push(eventHandler);
-    };
+        if(this.events[eventName] === undefined) {
+            this.events[eventName] = [];
+        }
+        this.events[eventName].push(eventHandler);
+    }
     removeEventListener(eventName, eventHandler) {
         if(this.events[eventName] === undefined) {
             this.events[eventName] = [];
         }
         this.events[eventName].splice(this.events[eventName].indexOf(eventHandler),1);
-    };
+    }
     dispatchEvent(eventName,eventArg) {
         if(this.events[eventName] !== undefined) {
             var handlers = this.events[eventName];
             for(var handlerCount=0;handlerCount < handlers.length;handlerCount++)
             {
-                if(handlers[handlerCount] !== undefined) {
-                    if(typeof eventArg !== "undefined" && eventArg !== null) {
+                if(handlers[handlerCount]) {
+                    if(eventArg) {
                         eventArg.currentEntity = this;
                     } else {
                         eventArg = {
                             currentEntity : this
                         };
+                    }
+                    if(eventName === 'cameraMove') {
+                        console.log(eventArg);
                     }
                     handlers[handlerCount](eventArg);
                 }
@@ -727,7 +730,9 @@ export  class BlackSheepGameEngine{
     }
     inputs() { return this.services['inputs']; }
     addEntity(anEntity) {
-        this.entities.push(anEntity);
+        if(anEntity) {
+            this.entities.push(anEntity);
+        }
     }
     removeEntity(anEntity) {
         this.entities.splice(this.entities.indexOf(anEntity),1);
@@ -761,56 +766,60 @@ export  class BlackSheepGameEngine{
             return myCollision.collisionRectangle.Intersect(itsCollision.collisionRectangle);
         }
     }
+    raiseEvent(eventName, eventArg) {
+        for(var entityCount = 0;entityCount < this.entities.length;entityCount++) {
+            this.entities[entityCount].dispatchEvent(eventName, eventArg);
+        }
+    }
     update() {
         var event = createEvent('gameUpdate', {});
         document.documentElement.dispatchEvent(event);
-        for(var entityCount = 0;entityCount < window.gameEngine.entities.length;entityCount++) {
-             window.gameEngine.entities[entityCount].dispatchEvent('gameUpdate', {});
-        }
-        for(var entityCount = 0; entityCount < window.gameEngine.entities.length;entityCount++) {
-            var collider = window.gameEngine.entities[entityCount];
-            for(var collidedCount = 0; collidedCount < window.gameEngine.entities.length;collidedCount++) {
-                var collided = window.gameEngine.entities[collidedCount];
-                if(!(collider === collided) &&
+        this.raiseEvent('gameUpdate', {});
+        for(var entityCount = 0; entityCount < this.entities.length;entityCount++) {
+            var collider = this.entities[entityCount];
+            for(var collidedCount = 0; collidedCount < this.entities.length;collidedCount++) {
+                var collided = this.entities[collidedCount];
+                if(collider !== collided &&
                     collider.components['collision'] &&
+                    collided.components['collision'] &&
                     collider.components['collision'].collisionRectangle.intersect(
-                    { x : collider.components['body'].x, y : collider.components['body'].y },
-                    collided.components['collision'].collisionRectangle,
-                    { x : collided.components['body'].x, y : collided.components['body'].y }))
+                        { x : collider.components['body'].x, y : collider.components['body'].y },
+                        collided.components['collision'].collisionRectangle,
+                        { x : collided.components['body'].x, y : collided.components['body'].y }))
                 {
                     collider.dispatchEvent('collision', { collided : collided});
                     collided.dispatchEvent('collision', { collided : collider});
                 }
             }
         }
-    };
+    }
     draw() {
-        for(var entityCount = 0;entityCount < window.gameEngine.entities.length;entityCount++) {
-            window.gameEngine.entities[entityCount].dispatchEvent('gameDraw', null);
+        for(var entityCount = 0;entityCount < this.entities.length;entityCount++) {
+            this.entities[entityCount].dispatchEvent('gameDraw', null);
         }
-    };
+    }
     gameLoop() {
-            if (window.gameEngine.inputs['x']) {
-                window.gameEngine.exit();
-            }
-            else
-            {
-                window.gameEngine.gameLoopId = window.setTimeout(function(){
-                    window.requestAnimationFrame(window.gameEngine.gameLoop)
-                },1000/60)
-            }
-            window.gameEngine.update();
-            window.gameEngine.draw();
+        if (window.gameEngine.inputs['x']) {
+            window.gameEngine.exit();
+        }
+        else
+        {
+            window.gameEngine.gameLoopId = window.setTimeout(function(){
+                window.requestAnimationFrame(window.gameEngine.gameLoop);
+            },1000/60);
+        }
+        window.gameEngine.update();
+        window.gameEngine.draw();
     }
     run() {
         this.init();
-        window.requestAnimationFrame(window.gameEngine.gameLoop)
-    };
+        window.requestAnimationFrame(this.gameLoop);
+    }
     exit() {
         console.log("exit !");
         var event = createEvent('gameExit', {});
         document.documentElement.dispatchEvent(event);
-        window.clearTimeout(window.gameEngine.gameLoopId);
+        window.clearTimeout(this.gameLoopId);
     }
 }
 

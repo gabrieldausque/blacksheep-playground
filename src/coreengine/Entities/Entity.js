@@ -12,24 +12,24 @@ export default class Entity {
         this.behaviors = {};
     }
     addEventListener(eventName, eventHandler) {
-      if(this.events[eventName] === undefined) {
-          this.events[eventName] = [];
-      }
-      this.events[eventName].push(eventHandler);
-    };
+        if(this.events[eventName] === undefined) {
+            this.events[eventName] = [];
+        }
+        this.events[eventName].push(eventHandler);
+    }
     removeEventListener(eventName, eventHandler) {
         if(this.events[eventName] === undefined) {
             this.events[eventName] = [];
         }
         this.events[eventName].splice(this.events[eventName].indexOf(eventHandler),1);
-    };
+    }
     dispatchEvent(eventName,eventArg) {
         if(this.events[eventName] !== undefined) {
             var handlers = this.events[eventName];
             for(var handlerCount=0;handlerCount < handlers.length;handlerCount++)
             {
-                if(handlers[handlerCount] !== undefined) {
-                    if(typeof eventArg !== "undefined" && eventArg !== null) {
+                if(handlers[handlerCount]) {
+                    if(eventArg) {
                         eventArg.currentEntity = this;
                     } else {
                         eventArg = {

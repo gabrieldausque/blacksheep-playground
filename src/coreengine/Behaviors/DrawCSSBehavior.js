@@ -1,4 +1,4 @@
-import Behavior from "./Behavior";
+import Behavior from './Behavior';
 
 export class DrawCSSBehavior extends Behavior {
     constructor(entity) {
@@ -16,13 +16,13 @@ export class DrawCSSBehavior extends Behavior {
             element.id = eventArgs.currentEntity.id;
             element.style.background = css.cssBackgroundText;
             element.style.zIndex = body.z;
-            element.style.width = body.width + "px";
-            element.style.height = body.height + "px";
-            element.style.position = "absolute";
+            element.style.width = body.width + 'px';
+            element.style.height = body.height + 'px';
+            element.style.position = 'absolute';
             element.style.cssText += css.otherCssText;
             display.appendChild(element);
         }
-        element.style.top = body.y + "px";
-        element.style.left = body.x + "px";
+        element.style.top = body.y + 'px';
+        element.style.left = body.x + 'px';
     }
 }
