@@ -12,13 +12,14 @@ class GroundTile extends BlackSheepGameEngine.Entity {
 }
 
 class MoveOnKeyPressedBehavior extends BlackSheepGameEngine.Behavior {
-    constructor(entity, leftKey, rightKey, upKey, downKey) {
+    constructor(entity, leftKey, rightKey, upKey, downKey, speedAcceleration) {
         super('moveOnKeyPress', entity);
         this.inputService = window.gameEngine.inputs();
         this.leftKey = leftKey;
         this.rightKey = rightKey;
         this.upKey = upKey;
         this.downKey = downKey;
+        this.speedAcceleration = speedAcceleration;
     }
     update(eventArgs) {
         let move = { 
@@ -28,18 +29,28 @@ class MoveOnKeyPressedBehavior extends BlackSheepGameEngine.Behavior {
         const currentEntity = eventArgs.currentEntity;
         const moveOnKeyPressBehavior = currentEntity.getBehavior('moveOnKeyPress');
         const moveComponent = currentEntity.getComponent('move');
+        
+        const newSpeedXAbs = (moveOnKeyPressBehavior.speedAcceleration)?
+            (Math.min(moveComponent.maxSpeedX, Math.abs(moveComponent.speedx) + moveOnKeyPressBehavior.speedAcceleration)):
+            moveComponent.maxSpeedX;
+        const newSpeedYAbs = (moveOnKeyPressBehavior.speedAcceleration)?
+            (Math.min(moveComponent.maxSpeedY, Math.abs(moveComponent.speedy) + moveOnKeyPressBehavior.speedAcceleration)):
+            moveComponent.maxSpeedY;
+
         if(moveOnKeyPressBehavior.inputService[moveOnKeyPressBehavior.leftKey]) {
-            move.x = -10;
+            move.x = -newSpeedXAbs;
         }
         if(moveOnKeyPressBehavior.inputService[moveOnKeyPressBehavior.rightKey]) {
-            move.x = 10;
+            move.x = newSpeedXAbs;
         }
+        
         if(moveOnKeyPressBehavior.inputService[moveOnKeyPressBehavior.upKey]) {
-            move.y = -10;
+            move.y = -newSpeedYAbs;
         }
         if(moveOnKeyPressBehavior.inputService[moveOnKeyPressBehavior.downKey]) {
-            move.y = 10;
+            move.y = newSpeedYAbs;
         }
+        
         moveComponent.speedx = move.x;
         moveComponent.speedy = move.y;
         currentEntity.dispatchEvent('speedUpdated',move); 
@@ -92,8 +103,6 @@ class Camera extends BlackSheepGameEngine.Entity {
                 x:moveComponent.speedx,
                 y:moveComponent.speedy
             };
-            console.log(cameraBody);
-
             if(cameraBody.x <= limitComponent.left || 
                cameraBody.x + cameraBody.width >= limitComponent.left + limitComponent.width) {
                 move.x = 0;    
