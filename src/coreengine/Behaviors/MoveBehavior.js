@@ -42,6 +42,8 @@ export default class MoveBehavior extends Behavior {
             toAddY = Math.max(toAddY, -move.maxSpeedY);
         }
         body.y += toAddY;
-        eventArgs.currentEntity.dispatchEvent('moveEvent',{ x: toAddX, y: toAddY });
+        
+        if(toAddX || toAddY)
+            eventArgs.currentEntity.dispatchEvent('move',{ x: toAddX, y: toAddY });
     }
 }
