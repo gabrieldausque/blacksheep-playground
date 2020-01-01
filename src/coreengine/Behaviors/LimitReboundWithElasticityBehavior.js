@@ -3,43 +3,6 @@ import LimitBehavior from "./LimitBehavior";
 export default class LimitReboundWithElasticityBehavior extends LimitBehavior {
     constructor(entity) {
         super('limitReboundWithElasticity', entity);
-        entity.addEventListener('moveEvent', this.getEnergy);
-        entity.addEventListener('moveEvent', this.checkLimits);
-    }
-
-    checkLimits(eventArgs) {
-        const bodyComponent = eventArgs.currentEntity.getComponent('body');
-        const limitComponent = eventArgs.currentEntity.getComponent('limits');
-        if(bodyComponent.y < limitComponent.top) {
-            bodyComponent.y = limitComponent.top;
-        } else if (bodyComponent.y + bodyComponent.height > limitComponent.top + limitComponent.height) {
-            bodyComponent.y = limitComponent.top + limitComponent.height - bodyComponent.height;
-        }
-    }
-
-    getEnergy(eventArgs) {
-        const elasticityComponent = eventArgs.currentEntity.getComponent('elasticity');
-        const moveComponent = eventArgs.currentEntity.getComponent('move');
-        const forcesComponent = eventArgs.currentEntity.getComponent('forces');
-
-        for(let namedForceIndex in forcesComponent.forces) {
-            let namedForce = forcesComponent.forces[namedForceIndex];
-            if(namedForce.name !== 'rebound') {
-                elasticityComponent.energy.x += namedForce.force.x;
-                elasticityComponent.energy.y += namedForce.force.y;
-            }
-        }
-
-        if(elasticityComponent.energy.x < 0) {
-            elasticityComponent.energy.x = Math.max(-moveComponent.maxSpeedX * elasticityComponent.elasticity, elasticityComponent.energy.x);
-        } else {
-            elasticityComponent.energy.x = Math.min(elasticityComponent.energy.x, moveComponent.maxSpeedX * elasticityComponent.elasticity);
-        }
-        if(elasticityComponent.energy.y < 0) {
-            elasticityComponent.energy.y = Math.max(-moveComponent.maxSpeedY * elasticityComponent.elasticity, elasticityComponent.energy.y);
-        } else {
-            elasticityComponent.energy.y = Math.min(elasticityComponent.energy.y, moveComponent.maxSpeedY * elasticityComponent.elasticity);
-        }
     }
 
     update(eventArgs) {
@@ -48,9 +11,15 @@ export default class LimitReboundWithElasticityBehavior extends LimitBehavior {
         const elasticityComponent = eventArgs.currentEntity.getComponent('elasticity');
         const moveComponent = eventArgs.currentEntity.getComponent('move');
         const reboundForce = forcesComponent.getForce('rebound');
-
+        
         if(limitCollision.y && reboundForce.force.y === 0) {
-            reboundForce.force.y = -elasticityComponent.energy.y;
+            reboundForce.force.y = 0;
+            for(let i = 0; i < forcesComponent.forces.length;i++) {
+                if(forcesComponent.forces[i] !== reboundForce) {
+                    reboundForce.force.y -= forcesComponent.forces[i].force.y
+                }
+            }
+            reboundForce.force.y = reboundForce.force.y * elasticityComponent.elasticity;
             moveComponent.speedy = - moveComponent.speedy;
         } else if(reboundForce.force.y < 0) {
             reboundForce.force.y += 1;

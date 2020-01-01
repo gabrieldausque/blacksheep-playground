@@ -8,6 +8,7 @@ class GroundTile extends BlackSheepGameEngine.Entity {
         this.addComponent(new BlackSheepGameEngine.CollisionComponent(new BlackSheepGameEngine.Rectangle(0,0,64,64)));
 
         this.addBehavior(new BlackSheepGameEngine.DrawCSSBehavior(this));
+        this.addBehavior(new OnCameraMoveBehavior(this));
     }
 }
 
@@ -125,10 +126,16 @@ document.documentElement.addEventListener('gameInit', function() {
     //generating the ground
     for(let i=0; i<32;i++){
         let color = (i<=16)?'linear-gradient(green, #A66829 40%)':'linear-gradient(red, #A66829 40%)';
-        let groundTile = new GroundTile((i*64),704, color);
-        groundTile.addBehavior(new OnCameraMoveBehavior(groundTile));
+        let groundTile = new GroundTile((i*64), 704, color);
         window.gameEngine.addEntity(groundTile);
     }
+
+    //create one platform
+    for(let i=0; i<5;i++) {
+        let platformTile = new GroundTile((i*64) + 500, 576, 'linear-gradient(green, #A66829 40%)');
+        window.gameEngine.addEntity(platformTile);
+    }
+
     //add camera
     window.gameEngine.addEntity(new Camera());
 });
