@@ -430,18 +430,14 @@ export  class LimitBehavior extends Behavior {
         };
 
         if (x + width > entity.components['limits'].left + entity.components['limits'].width) {
-            entity.components['body'].x = (entity.components['limits'].left + entity.components['limits'].width) - entity.components['body'].width;
             limitResults.x = true;
         } else if (x < entity.components['limits'].left) {
-            entity.components['body'].x = entity.components['limits'].left;
             limitResults.x = true;
         }
 
         if (y + height > entity.components['limits'].top + entity.components['limits'].height) {
-            entity.components['body'].y = (entity.components['limits'].top + entity.components['limits'].height) - entity.components['body'].height;
             limitResults.y = true;
         } else if (y < entity.components['limits'].top) {
-            entity.components['body'].y = entity.components['limits'].top;
             limitResults.y = true;
         }
 
@@ -471,7 +467,6 @@ export  class LimitBoundBehavior extends LimitBehavior {
         if(hasRebound) {
             currentEntity.dispatchEvent('rebound', eventArgs);
         }
-
     }
 }
 
@@ -526,6 +521,31 @@ export  class LimitReboundWithElasticityBehavior extends LimitBehavior {
     }
 }
 
+export  class LimitStopBehavior extends LimitBehavior {
+    constructor(entity){
+        super('limitStopper',entity);
+    }
+    update(eventArgs) {
+        const rebound = super.getLimitCollision.call(this, eventArgs.currentEntity);
+        const currentEntity = eventArgs.currentEntity;
+        let hasRebound = false;
+        if(rebound.x) {
+            eventArgs.currentEntity.components['body'].x = eventArgs.currentEntity.components['body'].x - eventArgs.currentEntity.components['move'].speedx;
+            eventArgs.currentEntity.components['move'].speedx = 0;
+            hasRebound = true;
+        }
+        if(rebound.y) {
+            eventArgs.currentEntity.components['body'].y = eventArgs.currentEntity.components['body'].y - eventArgs.currentEntity.components['move'].speedy;
+            eventArgs.currentEntity.components['move'].speedy = 0;
+            hasRebound = true;
+        }
+
+        if(hasRebound) {
+            currentEntity.dispatchEvent('rebound', eventArgs);
+        }
+    }
+}
+
 export  class MoveBehavior extends Behavior {
     constructor(entity) {
         super('mover', entity);
@@ -554,6 +574,10 @@ export  class MoveBehavior extends Behavior {
 
         let toAddX = speedx + forcesX;
         let toAddY = speedy + forcesY;
+        let previousPosition = {
+            x: body.x,
+            y: body.y
+        }
 
         if(toAddX > 0) {
             toAddX = Math.min(toAddX, move.maxSpeedX);
@@ -570,7 +594,7 @@ export  class MoveBehavior extends Behavior {
         body.y += toAddY;
         
         if(toAddX || toAddY)
-            eventArgs.currentEntity.dispatchEvent('move',{ x: toAddX, y: toAddY });
+            eventArgs.currentEntity.dispatchEvent('move',{ x: toAddX, y: toAddY, previousPosition: previousPosition });
     }
 }
 

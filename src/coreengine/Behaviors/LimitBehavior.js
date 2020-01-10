@@ -26,18 +26,14 @@ export default class LimitBehavior extends Behavior {
         };
 
         if (x + width > entity.components['limits'].left + entity.components['limits'].width) {
-            entity.components['body'].x = (entity.components['limits'].left + entity.components['limits'].width) - entity.components['body'].width;
             limitResults.x = true;
         } else if (x < entity.components['limits'].left) {
-            entity.components['body'].x = entity.components['limits'].left;
             limitResults.x = true;
         }
 
         if (y + height > entity.components['limits'].top + entity.components['limits'].height) {
-            entity.components['body'].y = (entity.components['limits'].top + entity.components['limits'].height) - entity.components['body'].height;
             limitResults.y = true;
         } else if (y < entity.components['limits'].top) {
-            entity.components['body'].y = entity.components['limits'].top;
             limitResults.y = true;
         }
 

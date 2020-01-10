@@ -88,36 +88,43 @@ class Camera extends BlackSheepGameEngine.Entity {
     constructor() {
         super();
         this.addComponent(new BlackSheepGameEngine.BodyComponent(0,0,0,1024,768,1));
-        this.addComponent(new BlackSheepGameEngine.MoveComponent(0,0,10,10));
+        
+        this.addComponent(new BlackSheepGameEngine.MoveComponent(0,0,16,16));
         this.addComponent(new BlackSheepGameEngine.LimitComponent(0,0,2048,768));
 
         this.addBehavior(new MoveOnKeyPressedBehavior(this,'4','6'));
         this.addBehavior(new BlackSheepGameEngine.MoveBehavior(this));
-        this.addBehavior(new BlackSheepGameEngine.LimitBoundBehavior(this));
-
-        this.addEventListener('move', function(eventArgs) {
-            const moveComponent = eventArgs.currentEntity.getComponent('move');
+        this.addBehavior(new BlackSheepGameEngine.LimitStopBehavior(this));
+        var behavior = new BlackSheepGameEngine.Behavior('mover', this);
+        behavior.previousPosition = {x: 0, y:0};
+        behavior.setUpdateHandler(function(eventArgs) {
             const limitComponent =eventArgs.currentEntity.getComponent('limits');
             const cameraBody = eventArgs.currentEntity.getComponent('body');
-
+            const mover = eventArgs.currentEntity.getBehavior('mover');
+            console.log(cameraBody);
             let move = {
-                x:moveComponent.speedx,
-                y:moveComponent.speedy
+                x: cameraBody.x - mover.previousPosition.x,
+                y: cameraBody.y - mover.previousPosition.y
             };
-            if(cameraBody.x <= limitComponent.left || 
-               cameraBody.x + cameraBody.width >= limitComponent.left + limitComponent.width) {
+            
+            if((cameraBody.x <= limitComponent.left || 
+               cameraBody.x + cameraBody.width >= limitComponent.left + limitComponent.width )) {
                 move.x = 0;    
             }
-
+    
             if(cameraBody.y <= limitComponent.top ||
                cameraBody.y + cameraBody.height >= limitComponent.top + limitComponent.height) {
                 move.y = 0;
             }
-
+    
             if(move.x || move.y) {
                 window.gameEngine.raiseEvent('cameraMove',move);
             }
+
+            mover.previousPosition.x = cameraBody.x;
+            mover.previousPosition.y = cameraBody.y;
         });
+        this.addBehavior(behavior);
     }
 }
 
@@ -137,7 +144,8 @@ document.documentElement.addEventListener('gameInit', function() {
     }
 
     //add camera
-    window.gameEngine.addEntity(new Camera());
+    var camera = new Camera();
+    window.gameEngine.addEntity(camera);
 });
 
 window.addEventListener('load', function() {

@@ -28,6 +28,10 @@ export default class MoveBehavior extends Behavior {
 
         let toAddX = speedx + forcesX;
         let toAddY = speedy + forcesY;
+        let previousPosition = {
+            x: body.x,
+            y: body.y
+        }
 
         if(toAddX > 0) {
             toAddX = Math.min(toAddX, move.maxSpeedX);
@@ -44,6 +48,6 @@ export default class MoveBehavior extends Behavior {
         body.y += toAddY;
         
         if(toAddX || toAddY)
-            eventArgs.currentEntity.dispatchEvent('move',{ x: toAddX, y: toAddY });
+            eventArgs.currentEntity.dispatchEvent('move',{ x: toAddX, y: toAddY, previousPosition: previousPosition });
     }
 }
