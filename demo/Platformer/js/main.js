@@ -1,5 +1,14 @@
 import * as BlackSheepGameEngine from './blacksheepgameengine-build.js';
 
+class Player extends BlackSheepGameEngine.Entity {
+    constructor(x,y) {
+        super();
+        this.addComponent(new BlackSheepGameEngine.BodyComponent(x,y,0,64,64,1));
+        this.addComponent(new BlackSheepGameEngine.MoveComponent(0,0,4,10));
+        this.addComponent(new BlackSheepGameEngine.ImageComponent( ))
+    }
+}
+
 class GroundTile extends BlackSheepGameEngine.Entity {
     constructor(x, y, color) {
         super();
