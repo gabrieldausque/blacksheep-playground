@@ -110,7 +110,6 @@ class Camera extends BlackSheepGameEngine.Entity {
             const limitComponent =eventArgs.currentEntity.getComponent('limits');
             const cameraBody = eventArgs.currentEntity.getComponent('body');
             const mover = eventArgs.currentEntity.getBehavior('mover');
-            console.log(cameraBody);
             let move = {
                 x: cameraBody.x - mover.previousPosition.x,
                 y: cameraBody.y - mover.previousPosition.y
