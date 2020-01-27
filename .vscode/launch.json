@@ -5,22 +5,25 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "type": "chrome",
+            "type": "firefox",
             "request": "launch",
             "name": "Demo BouncingBall",
-            "url":"http://localhost:5500/demo/BouncingBall/"
+            "url":"http://localhost:5500/demo/BouncingBall/",
+            "webRoot": "${workspaceFolder}"
         },
         {
-            "type": "chrome",
+            "type": "firefox",
             "request": "launch",
             "name": "Demo Deformations",
-            "url":"http://localhost:5500/demo/Deformations/"
+            "url":"http://localhost:5500/demo/Deformations/",
+            "webRoot": "${workspaceFolder}"
         },
         {
-            "type": "chrome",
+            "type": "firefox",
             "request": "launch",
             "name": "Demo Platformer",
-            "url":"http://localhost:5500/demo/Platformer/"
+            "url":"http://localhost:5500/demo/Platformer/",
+            "webRoot": "${workspaceFolder}"
         }
     ]
 }

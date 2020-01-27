@@ -65,7 +65,7 @@ class MoveOnKeyPressedBehavior extends BlackSheepGameEngine.Behavior {
         if(moveOnKeyPressBehavior.inputService[moveOnKeyPressBehavior.downKey]) {
             move.y = newSpeedYAbs;
         }
-        
+
         moveComponent.speedx = move.x;
         moveComponent.speedy = move.y;
         currentEntity.dispatchEvent('speedUpdated',move); 
@@ -108,25 +108,25 @@ class Camera extends BlackSheepGameEngine.Entity {
 
         this.addBehavior(new MoveOnKeyPressedBehavior(this,'4','6'));
         this.addBehavior(new BlackSheepGameEngine.MoveBehavior(this));
-        this.addBehavior(new BlackSheepGameEngine.LimitStopBehavior(this));
-        var behavior = new BlackSheepGameEngine.Behavior('mover', this);
+        this.addBehavior(new BlackSheepGameEngine.LimitBoundBehavior(this));
+        var behavior = new BlackSheepGameEngine.Behavior('cameraMover', this);
         behavior.previousPosition = {x: 0, y:0};
         behavior.setUpdateHandler(function(eventArgs) {
             const limitComponent =eventArgs.currentEntity.getComponent('limits');
             const cameraBody = eventArgs.currentEntity.getComponent('body');
-            const mover = eventArgs.currentEntity.getBehavior('mover');
+            const mover = eventArgs.currentEntity.getBehavior('cameraMover');
             let move = {
                 x: cameraBody.x - mover.previousPosition.x,
                 y: cameraBody.y - mover.previousPosition.y
             };
             
-            if((cameraBody.x <= limitComponent.left || 
-               cameraBody.x + cameraBody.width >= limitComponent.left + limitComponent.width )) {
+            if((cameraBody.x < limitComponent.left || 
+               cameraBody.x + cameraBody.width > limitComponent.left + limitComponent.width )) {
                 move.x = 0;    
             }
     
-            if(cameraBody.y <= limitComponent.top ||
-               cameraBody.y + cameraBody.height >= limitComponent.top + limitComponent.height) {
+            if(cameraBody.y < limitComponent.top ||
+               cameraBody.y + cameraBody.height > limitComponent.top + limitComponent.height) {
                 move.y = 0;
             }
     
@@ -134,10 +134,12 @@ class Camera extends BlackSheepGameEngine.Entity {
                 window.gameEngine.raiseEvent('cameraMove',move);
             }
 
+            console.log(move);
+
             mover.previousPosition.x = cameraBody.x;
             mover.previousPosition.y = cameraBody.y;
         });
-        this.addBehavior(behavior);
+        this.addBehavior(behavior); 
     }
 }
 
