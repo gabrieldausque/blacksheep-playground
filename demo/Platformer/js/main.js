@@ -5,7 +5,12 @@ class Player extends BlackSheepGameEngine.Entity {
         super();
         this.addComponent(new BlackSheepGameEngine.BodyComponent(x,y,0,64,64,1));
         this.addComponent(new BlackSheepGameEngine.MoveComponent(0,0,4,10));
-        this.addComponent(new BlackSheepGameEngine.ImageComponent( ))
+        this.addComponent(new BlackSheepGameEngine.ImageComponent('images/piaf.png', 1,1));
+        
+        this.addBehavior(new BlackSheepGameEngine.DrawImageBehavior(this));
+        this.addBehavior(new MoveOnKeyPressedBehavior(this,'ArrowLeft','ArrowRight'));
+        this.addBehavior(new BlackSheepGameEngine.MoveBehavior(this));
+        this.addBehavior(new OnCameraMoveBehavior(this));
     }
 }
 
@@ -154,6 +159,9 @@ document.documentElement.addEventListener('gameInit', function() {
     //add camera
     var camera = new Camera();
     window.gameEngine.addEntity(camera);
+
+    var player = new Player(0,640);
+    window.gameEngine.addEntity(player);
 });
 
 window.addEventListener('load', function() {
