@@ -2,8 +2,12 @@ const gulp = require('gulp');
 const debug = require('gulp-debug');
 const concatenate = require('gulp-concat');
 const fs = require('fs');
-
 const finalfileName = 'blacksheepgameengine-build.js';
+
+if(! fs.existsSync('src')) {
+    console.log('Changing working directory');
+    process.chdir('../');
+}
 
 gulp.task('create-file', function() {
     return gulp.src([
