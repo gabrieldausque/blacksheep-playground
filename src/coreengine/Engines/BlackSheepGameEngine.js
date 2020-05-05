@@ -86,7 +86,7 @@ export default class BlackSheepGameEngine{
         {
             window.gameEngine.gameLoopId = window.setTimeout(function(){
                 window.requestAnimationFrame(window.gameEngine.gameLoop);
-            },1000/60);
+            },1000/120);
         }
         window.gameEngine.update();
         window.gameEngine.draw();
