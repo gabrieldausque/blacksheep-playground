@@ -38,6 +38,7 @@ gulp.task('copy-to-demos', function() {
     .pipe(gulp.dest('demo/BouncingBall/js'))
     .pipe(gulp.dest('demo/Deformations/js'))
     .pipe(gulp.dest('demo/Platformer/js'))
+    .pipe(gulp.dest('demo/ActionRpgDemo/js'))
 })
 
 gulp.task('default', gulp.series('create-file', 'remove-import', 'copy-to-demos'));

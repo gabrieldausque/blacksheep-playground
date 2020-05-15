@@ -20,6 +20,5 @@ export default class Ball extends BlacksheepGameEngine.Entity {
         this.addBehavior(new BlacksheepGameEngine.GravityBehavior(this));
         this.addBehavior(new BlacksheepGameEngine.LimitReboundWithElasticityBehavior(this));
         this.addBehavior(new BlacksheepGameEngine.MoveBehavior(this));
-
     }
 }
