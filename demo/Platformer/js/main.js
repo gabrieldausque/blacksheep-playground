@@ -6,11 +6,13 @@ class Player extends BlackSheepGameEngine.Entity {
         this.addComponent(new BlackSheepGameEngine.BodyComponent(x,y,0,64,64,1));
         this.addComponent(new BlackSheepGameEngine.MoveComponent(0,0,4,10));
         this.addComponent(new BlackSheepGameEngine.ImageComponent('images/piaf.png', 1,1));
-        
+        this.addComponent(new StateComponent());
         this.addBehavior(new BlackSheepGameEngine.DrawImageBehavior(this));
-        this.addBehavior(new MoveOnKeyPressedBehavior(this,'ArrowLeft','ArrowRight'));
+        this.addBehavior(new BlackSheepGameEngine.MoveOnKeyPressedBehavior(this,'ArrowLeft','ArrowRight'));
+        this.addBehavior(new JumpOnKeyPressBehavior(this, ' '));
         this.addBehavior(new BlackSheepGameEngine.MoveBehavior(this));
-        this.addBehavior(new OnCameraMoveBehavior(this));
+        this.addBehavior(new BlackSheepGameEngine.OnCameraMoveBehavior(this));
+
     }
 }
 
@@ -22,53 +24,7 @@ class GroundTile extends BlackSheepGameEngine.Entity {
         this.addComponent(new BlackSheepGameEngine.CollisionComponent(new BlackSheepGameEngine.Rectangle(0,0,64,64)));
 
         this.addBehavior(new BlackSheepGameEngine.DrawCSSBehavior(this));
-        this.addBehavior(new OnCameraMoveBehavior(this));
-    }
-}
-
-class MoveOnKeyPressedBehavior extends BlackSheepGameEngine.Behavior {
-    constructor(entity, leftKey, rightKey, upKey, downKey, speedAcceleration) {
-        super('moveOnKeyPress', entity);
-        this.inputService = window.gameEngine.inputs();
-        this.leftKey = leftKey;
-        this.rightKey = rightKey;
-        this.upKey = upKey;
-        this.downKey = downKey;
-        this.speedAcceleration = speedAcceleration;
-    }
-    update(eventArgs) {
-        let move = { 
-            x:0,
-            y:0
-        };
-        const currentEntity = eventArgs.currentEntity;
-        const moveOnKeyPressBehavior = currentEntity.getBehavior('moveOnKeyPress');
-        const moveComponent = currentEntity.getComponent('move');
-        
-        const newSpeedXAbs = (moveOnKeyPressBehavior.speedAcceleration)?
-            (Math.min(moveComponent.maxSpeedX, Math.abs(moveComponent.speedx) + moveOnKeyPressBehavior.speedAcceleration)):
-            moveComponent.maxSpeedX;
-        const newSpeedYAbs = (moveOnKeyPressBehavior.speedAcceleration)?
-            (Math.min(moveComponent.maxSpeedY, Math.abs(moveComponent.speedy) + moveOnKeyPressBehavior.speedAcceleration)):
-            moveComponent.maxSpeedY;
-
-        if(moveOnKeyPressBehavior.inputService[moveOnKeyPressBehavior.leftKey]) {
-            move.x = -newSpeedXAbs;
-        }
-        if(moveOnKeyPressBehavior.inputService[moveOnKeyPressBehavior.rightKey]) {
-            move.x = newSpeedXAbs;
-        }
-        
-        if(moveOnKeyPressBehavior.inputService[moveOnKeyPressBehavior.upKey]) {
-            move.y = -newSpeedYAbs;
-        }
-        if(moveOnKeyPressBehavior.inputService[moveOnKeyPressBehavior.downKey]) {
-            move.y = newSpeedYAbs;
-        }
-
-        moveComponent.speedx = move.x;
-        moveComponent.speedy = move.y;
-        currentEntity.dispatchEvent('speedUpdated',move); 
+        this.addBehavior(new BlackSheepGameEngine.OnCameraMoveBehavior(this));
     }
 }
 
@@ -84,20 +40,6 @@ class DebugBehavior extends BlackSheepGameEngine.Behavior {
     }
 }
 
-class OnCameraMoveBehavior extends BlackSheepGameEngine.Behavior {
-    constructor(entity) {
-        super('onCameraMove', entity);
-        entity.addEventListener('cameraMove', function(eventArgs) {
-            let body = eventArgs.currentEntity.getComponent('body');
-            let move = eventArgs;
-            if(body) {
-                body.x -= move.x;
-                body.y -= move.y;
-            }
-        });
-    }
-}
-
 class Camera extends BlackSheepGameEngine.Entity {
     constructor() {
         super();
@@ -106,7 +48,7 @@ class Camera extends BlackSheepGameEngine.Entity {
         this.addComponent(new BlackSheepGameEngine.MoveComponent(0,0,16,16));
         this.addComponent(new BlackSheepGameEngine.LimitComponent(0,0,2048,768));
 
-        this.addBehavior(new MoveOnKeyPressedBehavior(this,'4','6'));
+        this.addBehavior(new BlackSheepGameEngine.MoveOnKeyPressedBehavior(this,'4','6'));
         this.addBehavior(new BlackSheepGameEngine.MoveBehavior(this));
         this.addBehavior(new BlackSheepGameEngine.LimitBoundBehavior(this));
         var behavior = new BlackSheepGameEngine.Behavior('cameraMover', this);
@@ -133,9 +75,6 @@ class Camera extends BlackSheepGameEngine.Entity {
             if(move.x || move.y) {
                 window.gameEngine.raiseEvent('cameraMove',move);
             }
-
-            console.log(move);
-
             mover.previousPosition.x = cameraBody.x;
             mover.previousPosition.y = cameraBody.y;
         });
@@ -143,7 +82,39 @@ class Camera extends BlackSheepGameEngine.Entity {
     }
 }
 
+class StateComponent extends BlackSheepGameEngine.Component {
+    constructor() {
+        super('state');
+        this.state = [];
+    }
+}
+
+class JumpOnKeyPressBehavior extends BlackSheepGameEngine.Behavior {
+    constructor(entity, jumpKey) {
+        super('jump',entity);
+        this.inputService = window.gameEngine.inputs();
+        this.jumpKey = jumpKey;
+    }
+    update(eventArgs) {
+        const currentEntity = eventArgs.currentEntity;
+        const moveComponent = currentEntity.getComponent('move');
+        const current = currentEntity.getBehavior('jump');
+        const stateComponent = currentEntity.getComponent('state');
+        console.log(eventArgs);
+        if(moveComponent.speedy <= 25 &&
+            stateComponent.state === 'jumping') {
+            moveComponent.speedy++;
+        } else {
+            if(current.inputService[current.jumpKey]){
+                stateComponent.state = 'jumping';
+                moveComponent.speedy = -150;
+            }
+        }
+    }
+}
+
 window.gameEngine = new BlackSheepGameEngine.BlackSheepGameEngine();
+
 document.documentElement.addEventListener('gameInit', function() {
     //generating the ground
     for(let i=0; i<32;i++){
