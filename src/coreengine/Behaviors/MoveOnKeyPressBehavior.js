@@ -42,6 +42,7 @@ export default class MoveOnKeyPressedBehavior extends Behavior {
 
         moveComponent.speedx = move.x;
         moveComponent.speedy = move.y;
+
         currentEntity.dispatchEvent('speedUpdated',move);
     }
 }

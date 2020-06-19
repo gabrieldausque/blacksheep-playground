@@ -6,12 +6,38 @@ class Player extends BlackSheepGameEngine.Entity {
         this.addComponent(new BlackSheepGameEngine.BodyComponent(x,y,0,64,64,1));
         this.addComponent(new BlackSheepGameEngine.MoveComponent(0,0,4,10));
         this.addComponent(new BlackSheepGameEngine.ImageComponent('images/piaf.png', 1,1));
+        this.addComponent(new BlackSheepGameEngine.CollisionComponent(new BlackSheepGameEngine.Rectangle(0,0,64,64)))
+        const forces = new BlackSheepGameEngine.ForcesComponent();
+        forces.addForce('gravity', {x:0, y:50});
+        this.addComponent(forces);
         this.addComponent(new StateComponent());
+
         this.addBehavior(new BlackSheepGameEngine.DrawImageBehavior(this));
         this.addBehavior(new BlackSheepGameEngine.MoveOnKeyPressedBehavior(this,'ArrowLeft','ArrowRight'));
         this.addBehavior(new JumpOnKeyPressBehavior(this, ' '));
         this.addBehavior(new BlackSheepGameEngine.MoveBehavior(this));
         this.addBehavior(new BlackSheepGameEngine.OnCameraMoveBehavior(this));
+
+        var behavior = new BlackSheepGameEngine.Behavior('onCollision', this);
+        behavior.onCollision = (e) => {
+            const collided = e.collided;
+            if(collided instanceof GroundTile){
+                const currentEntity = e.currentEntity;
+                const states = currentEntity.getComponent('state');
+                const forcesComponent = currentEntity.getComponent('forces');
+                const bodyComponent = currentEntity.getComponent('body');
+                const tileBodyComponent = collided.getComponent('body');
+                if(states.hasState('falling')){
+                    const f = forcesComponent.getForce('jump');
+                    f.force.y = 0;
+                    states.removeState('falling');
+                }
+                bodyComponent.y = tileBodyComponent.y - 64;
+            }
+
+        }
+        this.addEventListener('collision', behavior.onCollision);
+        this.addBehavior(behavior)
 
     }
 }
@@ -22,7 +48,6 @@ class GroundTile extends BlackSheepGameEngine.Entity {
         this.addComponent(new BlackSheepGameEngine.BodyComponent(x,y,0,64,64,0));
         this.addComponent(new BlackSheepGameEngine.CSSImageComponent(color));
         this.addComponent(new BlackSheepGameEngine.CollisionComponent(new BlackSheepGameEngine.Rectangle(0,0,64,64)));
-
         this.addBehavior(new BlackSheepGameEngine.DrawCSSBehavior(this));
         this.addBehavior(new BlackSheepGameEngine.OnCameraMoveBehavior(this));
     }
@@ -85,7 +110,20 @@ class Camera extends BlackSheepGameEngine.Entity {
 class StateComponent extends BlackSheepGameEngine.Component {
     constructor() {
         super('state');
-        this.state = [];
+        this.states = [];
+    }
+    addState(newState) {
+        if(!this.hasState(newState)) {
+            this.states.push(newState);
+        }
+    }
+    removeState(stateToRemove) {
+        if(this.hasState(stateToRemove)) {
+            this.states.splice(this.states.indexOf(stateToRemove),1);
+        }
+    }
+    hasState(searchedState){
+        return this.states.indexOf(searchedState) >= 0;
     }
 }
 
@@ -99,15 +137,18 @@ class JumpOnKeyPressBehavior extends BlackSheepGameEngine.Behavior {
         const currentEntity = eventArgs.currentEntity;
         const moveComponent = currentEntity.getComponent('move');
         const current = currentEntity.getBehavior('jump');
+        const forcesComponent = currentEntity.getComponent('forces');
         const stateComponent = currentEntity.getComponent('state');
-        console.log(eventArgs);
-        if(moveComponent.speedy <= 25 &&
-            stateComponent.state === 'jumping') {
-            moveComponent.speedy++;
+        const f = forcesComponent.getForce('jump');
+        if(current.inputService[current.jumpKey]) {
+            f.force.y = -1000;
+            stateComponent.addState('jumping');
         } else {
-            if(current.inputService[current.jumpKey]){
-                stateComponent.state = 'jumping';
-                moveComponent.speedy = -150;
+            if (stateComponent.hasState('jumping')) {
+                stateComponent.removeState('jumping');
+                stateComponent.addState('falling')
+            } else if(stateComponent.hasState('falling')) {
+                f.force.y = Math.max(0,f.force.y + 1);
             }
         }
     }
