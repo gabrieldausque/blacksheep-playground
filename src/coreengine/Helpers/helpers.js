@@ -18,11 +18,16 @@ export class Rectangle {
     bottom() {return this.top + this.height};
     right() { return this.left + this.width};
     intersect(origine, other, otherOrigine) {
-        const isIntersect = (origine.x + this.left) <= (otherOrigine.x + other.right())  &&
+        return (origine.x + this.left) <= (otherOrigine.x + other.right())  &&
             (otherOrigine.x + other.left)  <= (origine.x + this.right())  &&
             (origine.y + this.top) <= (otherOrigine.y + other.bottom()) &&
             (otherOrigine.y + other.top) <= (origine.y + this.bottom());
-        return isIntersect;
     };
+    barycentre() {
+        return {
+            x: this.left + (this.width/2),
+            y: this.top + (this.height/2)
+        }
+    }
 }
 

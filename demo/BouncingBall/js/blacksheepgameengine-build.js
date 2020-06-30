@@ -18,12 +18,17 @@ export class Rectangle {
     bottom() {return this.top + this.height};
     right() { return this.left + this.width};
     intersect(origine, other, otherOrigine) {
-        const isIntersect = (origine.x + this.left) <= (otherOrigine.x + other.right())  &&
+        return (origine.x + this.left) <= (otherOrigine.x + other.right())  &&
             (otherOrigine.x + other.left)  <= (origine.x + this.right())  &&
             (origine.y + this.top) <= (otherOrigine.y + other.bottom()) &&
             (otherOrigine.y + other.top) <= (origine.y + this.bottom());
-        return isIntersect;
     };
+    barycentre() {
+        return {
+            x: this.left + (this.width/2),
+            y: this.top + (this.height/2)
+        }
+    }
 }
 
 
@@ -49,6 +54,18 @@ export  class BodyComponent extends Component {
             y : this.y + (this.height/2)
         }
     }
+    top() {
+        return this.y;
+    }
+    bottom() {
+        return this.top() + this.width;
+    }
+    left() {
+        return this.x;
+    }
+    right() {
+        return this.left() + this.height;
+    }
 }
 
 
@@ -68,10 +85,63 @@ export  class CSSImageComponent extends Component {
 }
 
 export  class CollisionComponent extends Component{
-    constructor(rectangle) {
+    constructor(rectangle, owner) {
         super('collision');
         this.collisionRectangle = rectangle;
         this.lastCollision = Date.now();
+        this.owner = owner
+    }
+
+    top() {
+        return this.owner.getComponent('body').y + this.collisionRectangle.top;
+    }
+
+    left() {
+        return this.owner.getComponent('body').x + this.collisionRectangle.left;
+    }
+
+    right() {
+        return this.left() + this.collisionRectangle.width;
+    }
+
+    bottom() {
+        return this.top() + this.collisionRectangle.height;
+    }
+
+    barycentre() {
+        return {
+            x: this.left() + this.collisionRectangle.barycentre().x,
+            y: this.top() + this.collisionRectangle.barycentre().y
+        }
+    }
+
+    collide(collided) {
+        const origin =
+            {
+                x: this.owner.getComponent('body').x,
+                y: this.owner.getComponent('body').y
+            };
+        const otherOrigin =
+            {
+                x: collided.getComponent('body').x,
+                y: collided.getComponent('body').y
+            };
+        const otherRectangle = collided.getComponent('collision').collisionRectangle;
+        return this.collisionRectangle.intersect(origin, otherRectangle, otherOrigin);
+    }
+
+    generateCollisionEventArg(collided) {
+        const collidedCollisionComponent = collided.getComponent('collision');
+        const collidedCollisionMatrix = {
+            top: this.bottom() <=  collidedCollisionComponent.barycentre().y,
+            bottom: this.top() >= collidedCollisionComponent.barycentre().y,
+            right: this.left() >= collidedCollisionComponent.barycentre().x,
+            left: this.right() <= collidedCollisionComponent.barycentre().x
+        };
+        return {
+            collisionMatrix: collidedCollisionMatrix,
+            collided: collided
+        }
     }
 }
 
@@ -744,8 +814,8 @@ export  class Entity {
     }
     dispatchEvent(eventName,eventArg) {
         if(this.events[eventName] !== undefined) {
-            var handlers = this.events[eventName];
-            for(var handlerCount=0;handlerCount < handlers.length;handlerCount++)
+            const handlers = this.events[eventName];
+            for(let handlerCount=0;handlerCount < handlers.length;handlerCount++)
             {
                 if(handlers[handlerCount]) {
                     if(eventArg) {
@@ -817,20 +887,6 @@ export  class BlackSheepGameEngine{
         var event = createEvent('gameInit',{});
         document.documentElement.dispatchEvent(event);
     }
-    //TODO : move to a specific class
-    isCollidedWith(entity) {
-        if((entity === this) ||
-            (typeof this.components['collision']) === 'undefined' ||
-            (typeof entity.components['collision'] === 'undefined')
-        )
-            return false;
-        else
-        {
-            var myCollision = this.components['collision'];
-            var itsCollision = entity.components['collision'];
-            return myCollision.collisionRectangle.Intersect(itsCollision.collisionRectangle);
-        }
-    }
     raiseEvent(eventName, eventArg) {
         for(var entityCount = 0;entityCount < this.entities.length;entityCount++) {
             this.entities[entityCount].dispatchEvent(eventName, eventArg);
@@ -840,20 +896,21 @@ export  class BlackSheepGameEngine{
         var event = createEvent('gameUpdate', {});
         document.documentElement.dispatchEvent(event);
         this.raiseEvent('gameUpdate', {});
-        for(var entityCount = 0; entityCount < this.entities.length;entityCount++) {
-            var collider = this.entities[entityCount];
-            for(var collidedCount = 0; collidedCount < this.entities.length;collidedCount++) {
-                var collided = this.entities[collidedCount];
+        for(let entityCount = 0; entityCount < this.entities.length;entityCount++) {
+            const collider = this.entities[entityCount];
+            for(let collidedCount = 0; collidedCount < this.entities.length;collidedCount++) {
+                const collided = this.entities[collidedCount];
                 if(collider !== collided &&
-                    collider.components['collision'] &&
-                    collided.components['collision'] &&
-                    collider.components['collision'].collisionRectangle.intersect(
-                        { x : collider.components['body'].x, y : collider.components['body'].y },
-                        collided.components['collision'].collisionRectangle,
-                        { x : collided.components['body'].x, y : collided.components['body'].y }))
+                    collider.getComponent('collision') &&
+                    collided.getComponent('collision') &&
+                    collider.getComponent('collision').collide(collided))
                 {
-                    collider.dispatchEvent('collision', { collided : collided});
-                    collided.dispatchEvent('collision', { collided : collider});
+                    const colliderComponent = collider.getComponent('collision');
+                    const collidedComponent = collided.getComponent('collision');
+                    const colliderEvent = colliderComponent.generateCollisionEventArg(collided);
+                    const collidedEvent = collidedComponent.generateCollisionEventArg(collider);
+                    collider.dispatchEvent('collision', colliderEvent);
+                    collided.dispatchEvent('collision', collidedEvent);
                 }
             }
         }

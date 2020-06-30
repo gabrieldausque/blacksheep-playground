@@ -25,8 +25,8 @@ export default class Entity {
     }
     dispatchEvent(eventName,eventArg) {
         if(this.events[eventName] !== undefined) {
-            var handlers = this.events[eventName];
-            for(var handlerCount=0;handlerCount < handlers.length;handlerCount++)
+            const handlers = this.events[eventName];
+            for(let handlerCount=0;handlerCount < handlers.length;handlerCount++)
             {
                 if(handlers[handlerCount]) {
                     if(eventArg) {

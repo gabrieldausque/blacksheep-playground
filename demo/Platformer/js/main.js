@@ -6,7 +6,7 @@ class Player extends BlackSheepGameEngine.Entity {
         this.addComponent(new BlackSheepGameEngine.BodyComponent(x,y,0,64,64,1));
         this.addComponent(new BlackSheepGameEngine.MoveComponent(0,0,4,10));
         this.addComponent(new BlackSheepGameEngine.ImageComponent('images/piaf.png', 1,1));
-        this.addComponent(new BlackSheepGameEngine.CollisionComponent(new BlackSheepGameEngine.Rectangle(0,0,63,63)));
+        this.addComponent(new BlackSheepGameEngine.CollisionComponent(new BlackSheepGameEngine.Rectangle(0,0,63,63), this));
         const forces = new BlackSheepGameEngine.ForcesComponent();
         forces.addForce('gravity', {x:0, y:50});
         this.addComponent(forces);
@@ -18,10 +18,14 @@ class Player extends BlackSheepGameEngine.Entity {
         this.addBehavior(new BlackSheepGameEngine.MoveBehavior(this));
         this.addBehavior(new BlackSheepGameEngine.OnCameraMoveBehavior(this));
 
-        var behavior = new BlackSheepGameEngine.Behavior('onCollision', this);
+        const behavior = new BlackSheepGameEngine.Behavior('onCollision', this);
         behavior.onCollision = (e) => {
             const collided = e.collided;
-            if(collided instanceof GroundTile){
+            const collidedCollisionComponent = e.collided.getComponent('collision');
+            if(collided instanceof GroundTile &&
+                e.collisionMatrix.top /*&&
+                this.owner.getComponent('body').bottom() < collided.getComponent('body').top()*/
+            ) {
                 const currentEntity = e.currentEntity;
                 const states = currentEntity.getComponent('state');
                 const forcesComponent = currentEntity.getComponent('forces');
@@ -47,7 +51,7 @@ class GroundTile extends BlackSheepGameEngine.Entity {
         super();
         this.addComponent(new BlackSheepGameEngine.BodyComponent(x,y,0,64,64,0));
         this.addComponent(new BlackSheepGameEngine.CSSImageComponent(color));
-        this.addComponent(new BlackSheepGameEngine.CollisionComponent(new BlackSheepGameEngine.Rectangle(0,0,63,63)));
+        this.addComponent(new BlackSheepGameEngine.CollisionComponent(new BlackSheepGameEngine.Rectangle(0,0,63,63), this));
         this.addBehavior(new BlackSheepGameEngine.DrawCSSBehavior(this));
         this.addBehavior(new BlackSheepGameEngine.OnCameraMoveBehavior(this));
     }

@@ -16,4 +16,16 @@ export default class BodyComponent extends Component {
             y : this.y + (this.height/2)
         }
     }
+    top() {
+        return this.y;
+    }
+    bottom() {
+        return this.top() + this.width;
+    }
+    left() {
+        return this.x;
+    }
+    right() {
+        return this.left() + this.height;
+    }
 }
