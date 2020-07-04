@@ -8,7 +8,7 @@ class Player extends BlackSheepGameEngine.Entity {
         this.addComponent(new BlackSheepGameEngine.ImageComponent('images/piaf.png', 1,1));
         this.addComponent(new BlackSheepGameEngine.CollisionComponent(new BlackSheepGameEngine.Rectangle(0,0,63,63), this));
         const forces = new BlackSheepGameEngine.ForcesComponent();
-        forces.addForce('gravity', {x:0, y:50});
+        //forces.addForce('gravity', {x:0, y:50});
         this.addComponent(forces);
         this.addComponent(new StateComponent());
 
@@ -17,7 +17,7 @@ class Player extends BlackSheepGameEngine.Entity {
         this.addBehavior(new JumpOnKeyPressBehavior(this, ' '));
         this.addBehavior(new BlackSheepGameEngine.MoveBehavior(this));
         this.addBehavior(new BlackSheepGameEngine.OnCameraMoveBehavior(this));
-
+        this.addBehavior(new BlackSheepGameEngine.GravityBehavior(this));
         const behavior = new BlackSheepGameEngine.Behavior('onCollision', this);
         behavior.onCollision = (e) => {
             const collided = e.collided;
@@ -137,41 +137,32 @@ class JumpOnKeyPressBehavior extends BlackSheepGameEngine.Behavior {
         this.inputService = window.gameEngine.inputs();
         this.jumpKey = jumpKey;
     }
-    lastJump;
+    jumpOri;
     update(eventArgs) {
         const currentEntity = eventArgs.currentEntity;
-        const moveComponent = currentEntity.getComponent('move');
+        const bodyComponent = currentEntity.getComponent('body');
         const current = currentEntity.getBehavior('jump');
-        const forcesComponent = currentEntity.getComponent('forces');
         const stateComponent = currentEntity.getComponent('state');
-        const f = forcesComponent.getForce('jump');
         if(current.inputService[current.jumpKey] &&
             !stateComponent.hasState('falling')) {
-            if(!current.lastJump)
-                current.lastJump = Date.now();
-            const msAfterLastJump = Date.now() - current.lastJump;
-            console.log(msAfterLastJump + ' ms');
-            if(msAfterLastJump < 300) {
-                f.force.y = -500000;
-                stateComponent.addState('jumping');
+            if(!current.jumpOri)
+               current.jumpOri = bodyComponent.y;
+            stateComponent.addState('jumping')
+        }
+
+        if(stateComponent.hasState('jumping')) {
+            if(bodyComponent.y > (current.jumpOri - 192)){
+                bodyComponent.y = bodyComponent.y - 30;
             } else {
-                if (stateComponent.hasState('jumping')) {
-                    stateComponent.removeState('jumping');
-                    stateComponent.addState('falling')
-                } else if(stateComponent.hasState('falling')) {
-                    if(f.force.y < 0)
-                        f.force.y = Math.max(0,f.force.y + 1);
-                }
-            }
-        } else {
-            if (stateComponent.hasState('jumping')) {
                 stateComponent.removeState('jumping');
                 stateComponent.addState('falling')
-            } else if(stateComponent.hasState('falling')) {
-                if(f.force.y < 0)
-                    f.force.y = Math.max(0,f.force.y + 1);
-            } else {
-                current.lastJump = null;
+                current.jumpOri = null;
+            }
+        } else {
+            if(stateComponent.hasState('jumping')) {
+                stateComponent.removeState('jumping');
+                stateComponent.addState('falling')
+                current.jumpOri = null;
             }
         }
     }
