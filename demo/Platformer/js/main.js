@@ -137,6 +137,7 @@ class JumpOnKeyPressBehavior extends BlackSheepGameEngine.Behavior {
         this.inputService = window.gameEngine.inputs();
         this.jumpKey = jumpKey;
     }
+    lastJump;
     update(eventArgs) {
         const currentEntity = eventArgs.currentEntity;
         const moveComponent = currentEntity.getComponent('move');
@@ -144,15 +145,33 @@ class JumpOnKeyPressBehavior extends BlackSheepGameEngine.Behavior {
         const forcesComponent = currentEntity.getComponent('forces');
         const stateComponent = currentEntity.getComponent('state');
         const f = forcesComponent.getForce('jump');
-        if(current.inputService[current.jumpKey]) {
-            f.force.y = -3000;
-            stateComponent.addState('jumping');
+        if(current.inputService[current.jumpKey] &&
+            !stateComponent.hasState('falling')) {
+            if(!current.lastJump)
+                current.lastJump = Date.now();
+            const msAfterLastJump = Date.now() - current.lastJump;
+            console.log(msAfterLastJump + ' ms');
+            if(msAfterLastJump < 300) {
+                f.force.y = -500000;
+                stateComponent.addState('jumping');
+            } else {
+                if (stateComponent.hasState('jumping')) {
+                    stateComponent.removeState('jumping');
+                    stateComponent.addState('falling')
+                } else if(stateComponent.hasState('falling')) {
+                    if(f.force.y < 0)
+                        f.force.y = Math.max(0,f.force.y + 1);
+                }
+            }
         } else {
             if (stateComponent.hasState('jumping')) {
                 stateComponent.removeState('jumping');
                 stateComponent.addState('falling')
             } else if(stateComponent.hasState('falling')) {
-                f.force.y = Math.max(0,f.force.y + 1);
+                if(f.force.y < 0)
+                    f.force.y = Math.max(0,f.force.y + 1);
+            } else {
+                current.lastJump = null;
             }
         }
     }
