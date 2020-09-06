@@ -11,14 +11,14 @@ if(! fs.existsSync('src')) {
 
 gulp.task('create-file', function() {
     return gulp.src([
-        'src/coreengine/Helpers/*.js',
-        'src/coreengine/Components/Component.js',
-        'src/coreengine/Components/*.js',
-        'src/coreengine/Behaviors/Behavior.js',
-        'src/coreengine/Behaviors/*.js',
-        'src/coreengine/Entities/Entity.js',
-        'src/coreengine/Entities/*.js',
-        'src/coreengine/Engines/*.js'
+        'packages/coreengine/Helpers/*.js',
+        'packages/coreengine/Components/Component.js',
+        'packages/coreengine/Components/*.js',
+        'packages/coreengine/Behaviors/Behavior.js',
+        'packages/coreengine/Behaviors/*.js',
+        'packages/coreengine/Entities/Entity.js',
+        'packages/coreengine/Entities/*.js',
+        'packages/coreengine/Engines/*.js'
         ]).pipe(debug({title: "concat-file"}))
         .pipe(concatenate(finalfileName))
         .pipe(gulp.dest('dist/'))

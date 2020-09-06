@@ -2,15 +2,7 @@
   "name": "blacksheep-playground",
   "version": "1.0.0",
   "description": "Blacksheep video game engine using electron",
-  "dependencies": {},
   "devDependencies": {
-    "gulp": "^4.0.2",
-    "gulp-concat": "^2.6.1",
-    "gulp-debug": "^4.0.0",
-    "webpack-stream": "^5.2.1",
-    "path": "^0.12.7",
-    "typescript": "^4.0.2",
-    "ts-node": "^9.0.0",
-    "tslint": "^6.1.3"
+    "lerna": "^3.22.1"
   }
 }

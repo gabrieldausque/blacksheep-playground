@@ -1,0 +1,14 @@
+{
+  "name": "@blacksheep/bspg-demo",
+  "version": "1.0.0",
+  "description": "The demo application for blacksheep playground",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "@blacksheep/playground": "^0.0.0"
+  },
+  "author": "",
+  "license": "ISC"
+}
