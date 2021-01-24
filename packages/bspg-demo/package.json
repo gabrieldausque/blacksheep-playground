@@ -2,13 +2,18 @@
   "name": "@blacksheep/bspg-demo",
   "version": "1.0.0",
   "description": "The demo application for blacksheep playground",
-  "main": "main.js",
+  "main": "index.js",
   "scripts": {
+    "compile": "node_modules/.bin/tsc",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "dependencies": {
-    "@blacksheep/playground": "^0.0.0"
-  },
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "@blacksheep/playground": "^0.0.1"
+  },
+  "devDependencies": {
+    "typescript": "^4.1.3",
+    "@types/node": "^14.14.22"
+  }
 }

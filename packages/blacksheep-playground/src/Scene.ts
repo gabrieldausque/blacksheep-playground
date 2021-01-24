@@ -11,7 +11,7 @@ export class Scene extends EventEmitter{
 
     constructor() {
         super();
-        this.entitixes = []
+        this.entities = []
     }
 
     /**

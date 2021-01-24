@@ -4,5 +4,9 @@
   "description": "Blacksheep video game engine using electron",
   "devDependencies": {
     "lerna": "^3.22.1"
+  },
+  "scripts": {
+    "bootstrap": "lerna bootstrap",
+    "compile": "lerna run compile"
   }
 }

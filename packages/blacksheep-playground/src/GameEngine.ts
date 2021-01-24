@@ -1,17 +1,19 @@
+import Timeout = NodeJS.Timeout;
+
 const EventEmitter = require('events');
 import * as util from 'util';
 const promisify = util.promisify;
 
 export class GameEngine extends EventEmitter {
 
-    private timer;
+    private timer:Timeout | null;
 
     constructor() {
         super();
+        this.timer = null;
     }
 
     init() {
-
     }
 
     async run() {
@@ -19,6 +21,12 @@ export class GameEngine extends EventEmitter {
     }
 
     executeFrame(){
-        console.timeLog('A frame is running')
+        console.timeLog('A frame is running');
+    }
+
+    async stop(){
+        if(this.timer){
+            clearTimeout(this.timer)
+        }
     }
 }
