@@ -6,7 +6,8 @@
     "lerna": "^3.22.1"
   },
   "scripts": {
-    "bootstrap": "lerna bootstrap",
-    "compile": "lerna run compile"
+    "bootstrap": "lerna bootstrap --hoist",
+    "compile": "lerna run compile",
+    "start": "lerna run compile && lerna run start --stream"
   }
 }
