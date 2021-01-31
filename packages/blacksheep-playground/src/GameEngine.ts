@@ -22,6 +22,7 @@ export class GameEngine extends EventEmitter {
     async init():Promise<void> {
         console.log('Initializing ...');
         const current = this;
+        //TODO use a factory to create the right server with the
         this.server = new ExpressGameServer(() => {
             console.log(`Getting Framestate ${this.frameState}`);
             return current.frameState;
