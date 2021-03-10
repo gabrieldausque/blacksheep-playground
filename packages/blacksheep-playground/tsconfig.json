@@ -5,9 +5,6 @@
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "sourceMap": true,
-    "typeRoots": [
-      "node_modules/@types"
-    ],
     "outDir": "./dist",
     "rootDir": "./src",
     "strict": true,
@@ -17,6 +14,7 @@
   },
   "exclude": [
     "node_modules",
+    "dist",
     "tests"
   ]
 }

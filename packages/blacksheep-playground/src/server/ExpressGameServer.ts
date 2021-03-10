@@ -2,10 +2,10 @@ import express, {Express} from 'express';
 
 export class ExpressGameServer {
     private app: Express;
-    constructor(entityEndpoint:any) {
+    constructor(sceneEndPoint:any) {
         this.app = express()
-        this.app.get('/entity/', (req:any, res:any) => {
-            res.send(entityEndpoint())
+        this.app.get('/scenes/', (req:any, res:any) => {
+            res.send(sceneEndPoint())
         })
         this.app.use(express.static('public'))
         this.app.get('/', (req:any, res:any) => {

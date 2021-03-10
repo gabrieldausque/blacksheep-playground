@@ -4,6 +4,10 @@ const EventEmitter = require('events');
 
 export class Scene extends EventEmitter{
 
+    static deserialize(jsonPath:string){
+
+    }
+
     /**
      * List of entities of the current scene
      */
