@@ -9,13 +9,14 @@ export class GameEngine extends EventEmitter {
 
     private timer:Timeout | null;
     private frameState: Date;
+    private server?: ExpressGameServer;
 
     constructor() {
         super();
         this.timer = null;
         this.frameState = new Date();
         this.init().then(() => {
-            console.timeLog('Game Started');
+            console.log('Game Started');
         })
     }
 
@@ -30,7 +31,7 @@ export class GameEngine extends EventEmitter {
     }
 
     async run() {
-        console.timeLog('Game Running');
+        console.log('Game Running');
         this.timer = setInterval(this.executeFrame.bind(this), 1000/60);
     }
 
@@ -41,6 +42,9 @@ export class GameEngine extends EventEmitter {
     async stop(){
         if(this.timer){
             clearTimeout(this.timer)
+        }
+        if(this.server){
+            await this.server.stop();
         }
     }
 }
