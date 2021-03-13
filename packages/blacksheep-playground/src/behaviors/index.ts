@@ -1,0 +1,1 @@
+export {Behavior, BehaviorContract} from './Behavior';

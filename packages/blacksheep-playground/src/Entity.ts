@@ -10,7 +10,7 @@ export interface SerializedEntityContract {
 
 export class Entity extends events.EventEmitter {
 
-    static deserialize(serializedEntity:string){
+    static deserialize(serializedEntity:string):Entity{
         const deserializedEntityContract:SerializedEntityContract = JSON.parse(serializedEntity) as SerializedEntityContract;
         const entity = new Entity();
         for(const serializedComponent of deserializedEntityContract.components){
@@ -19,6 +19,7 @@ export class Entity extends events.EventEmitter {
         for(const serializedBehavior of deserializedEntityContract.behaviors) {
             entity.addComponent(Behavior.deserialize(serializedBehavior));
         }
+        return entity;
     }
 
     id:string;
