@@ -21,7 +21,6 @@ export class GameEngine extends EventEmitter {
     }
 
     async init():Promise<void> {
-        console.log('Initializing ...');
         const current = this;
         //TODO use a factory to create the right server with the
         this.server = new ExpressGameServer(() => {
@@ -31,7 +30,6 @@ export class GameEngine extends EventEmitter {
     }
 
     async run() {
-        console.log('Game Running');
         this.timer = setInterval(this.executeFrame.bind(this), 1000/60);
     }
 

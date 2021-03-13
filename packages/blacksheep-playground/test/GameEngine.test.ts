@@ -33,7 +33,7 @@ describe('GameEngine tests', () => {
     })
 
     it('should have a scene with one entity when game start', async() => {
-        assert.fail('Test creation');
+
     })
 
 })
