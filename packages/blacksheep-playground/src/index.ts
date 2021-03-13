@@ -2,7 +2,7 @@ import { globalInstancesFactory } from '@hermes/composition';
 
 export {GameEngine} from './GameEngine';
 export {Entity, SerializedEntityContract} from './Entity';
-export {Scene} from './Scene';
+export {Scene, SerializedSceneContract} from './Scene';
 export * from './components';
 export * from './behaviors';
 

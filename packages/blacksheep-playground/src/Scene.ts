@@ -1,17 +1,27 @@
-import {Entity} from "./Entity";
+import {Entity, SerializedEntityContract} from "./Entity";
+import * as events from 'events';
 
-const EventEmitter = require('events');
+export interface SerializedSceneContract {
+    entities:Array<SerializedEntityContract>
+}
 
-export class Scene extends EventEmitter{
+export class Scene extends events.EventEmitter{
 
-    static deserialize(jsonPath:string){
-
+    static deserialize(serializedScene:string | SerializedSceneContract) {
+        const deserializedSceneContract:SerializedSceneContract = typeof serializedScene === 'string'?
+            JSON.parse(serializedScene) as SerializedSceneContract:
+            serializedScene;
+        const scene = new Scene();
+        for(const serializedEntity of deserializedSceneContract.entities){
+            scene.addEntity(Entity.deserialize(serializedEntity));
+        }
+        return scene;
     }
 
     /**
      * List of entities of the current scene
      */
-    private entities: Entity[];
+    entities: Entity[];
 
     constructor() {
         super();

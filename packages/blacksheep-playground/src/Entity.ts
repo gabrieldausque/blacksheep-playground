@@ -10,14 +10,16 @@ export interface SerializedEntityContract {
 
 export class Entity extends events.EventEmitter {
 
-    static deserialize(serializedEntity:string):Entity{
-        const deserializedEntityContract:SerializedEntityContract = JSON.parse(serializedEntity) as SerializedEntityContract;
+    static deserialize(serializedEntity:string | SerializedEntityContract):Entity{
+        const deserializedEntityContract:SerializedEntityContract = typeof serializedEntity === 'string'?
+            JSON.parse(serializedEntity) as SerializedEntityContract:
+            serializedEntity;
         const entity = new Entity();
         for(const serializedComponent of deserializedEntityContract.components){
             entity.addComponent(EntityComponent.deserialize(serializedComponent));
         }
         for(const serializedBehavior of deserializedEntityContract.behaviors) {
-            entity.addComponent(Behavior.deserialize(serializedBehavior));
+            entity.addBehavior(Behavior.deserialize(serializedBehavior));
         }
         return entity;
     }
@@ -46,13 +48,30 @@ export class Entity extends events.EventEmitter {
     }
 
     hasComponent(entityComponent: EntityComponent):boolean {
-        return typeof this.getComponent(entityComponent.contractType, entityComponent.contractName) !== 'undefined'
+        return typeof this.getComponent(entityComponent.contractName, entityComponent.contractType) !== 'undefined'
     }
 
-    getComponent(type:string, name:string):EntityComponent | undefined {
+    getComponent<T extends EntityComponent = EntityComponent>(name:string, type:string = 'Component'):T | undefined {
         return this.components.find(c =>
             c.contractType === type &&
             c.contractName === name
-        )
+        ) as T;
+    }
+
+    addBehavior(behavior: Behavior) {
+        if(!this.hasBehavior(behavior)) {
+            this.behaviors.push(behavior);
+        }
+    }
+
+    hasBehavior(behavior: Behavior) {
+        return typeof this.getBehavior(behavior.contractName, behavior.contractType) !== 'undefined';
+    }
+
+    getBehavior<T extends Behavior = Behavior>(name: string, type: string = 'Behavior'): T | undefined {
+        return this.behaviors.find(b =>
+            b.contractType === type &&
+            b.contractName === name
+        ) as T;
     }
 }
