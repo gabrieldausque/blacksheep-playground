@@ -2,18 +2,16 @@ import * as chai from 'chai';
 chai.use(require('chai-as-promised'));
 import {expect} from 'chai';
 import * as assert from 'assert';
-import {GameEngine} from "../src";
+import {GameEngine, Scene} from "../src";
 const axios = require('axios');
 
 describe('GameEngine tests', () => {
 
     let game:GameEngine;
 
-    beforeEach(() => {
+    beforeEach(async () => {
         game = new GameEngine();
-        game.run().then(() => {
-            console.log('game running');
-        });
+        await game.run();
     })
 
     afterEach(() => {
@@ -32,8 +30,10 @@ describe('GameEngine tests', () => {
         expect(result.statusText).to.eql('OK');
     })
 
-    it('should have a scene with one entity when game start', async() => {
-
+    it('should have a scene with two entities when game start', async() => {
+        const scene = await game.getScene(0);
+        expect(scene).to.be.instanceOf(Scene);
+        expect(scene.entities.length).to.eql(2);
     })
 
 })

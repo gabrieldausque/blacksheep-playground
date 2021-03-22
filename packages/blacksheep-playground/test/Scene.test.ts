@@ -2,7 +2,7 @@ import * as chai from 'chai';
 chai.use(require('chai-as-promised'));
 import {expect} from 'chai';
 import * as assert from 'assert';
-import {Scene, SerializedSceneContract} from "../src";
+import {BodyComponent, Scene, SerializedSceneContract} from "../src";
 
 describe('Scene Tests',() => {
 
@@ -19,7 +19,7 @@ describe('Scene Tests',() => {
                     {
                         contractType:'Component',
                         contractName:'Speed',
-                        speeds: {x: 0, y:0, z:0},
+                        speeds: {x: 10, y:0, z:0},
                         maxSpeeds: {x:10,y:10,z:10}
                     }
                 ],
@@ -41,7 +41,7 @@ describe('Scene Tests',() => {
                     {
                         contractType:'Component',
                         contractName:'Speed',
-                        speeds: {x: 0, y:0, z:0},
+                        speeds: {x: 10, y:0, z:0},
                         maxSpeeds: {x:10,y:10,z:10}
                     }
                 ],
@@ -61,8 +61,11 @@ describe('Scene Tests',() => {
         expect(scene.entities.length).to.eql(2);
     })
 
-    it('Should update all entities of scene when calling update', () => {
-        assert.fail('To implement');
+    it('Should update all entities of scene when calling update', async () => {
+        const scene = Scene.deserialize(JSON.stringify(aSceneSerialized));
+        await scene.update();
+        expect(scene.entities[0].getComponent<BodyComponent>('Body')?.position.x).to.eql(25);
+        expect(scene.entities[1].getComponent<BodyComponent>('Body')?.position.x).to.eql(10);
     })
 
 })

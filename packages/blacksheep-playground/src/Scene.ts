@@ -37,4 +37,13 @@ export class Scene extends events.EventEmitter{
             this.entities.push(entity);
         }
     }
+
+    /**
+     * Update all entities of the scene
+     */
+    async update():Promise<void> {
+        for(const entity of this.entities){
+            await entity.update();
+        }
+    }
 }
