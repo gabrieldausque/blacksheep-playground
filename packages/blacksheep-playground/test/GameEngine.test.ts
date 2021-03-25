@@ -3,6 +3,7 @@ chai.use(require('chai-as-promised'));
 import {expect} from 'chai';
 import * as assert from 'assert';
 import {GameEngine, Scene} from "../src";
+import {ExpressGameServer} from "../src/server/ExpressGameServer";
 const axios = require('axios');
 
 describe('GameEngine tests', () => {
@@ -14,18 +15,19 @@ describe('GameEngine tests', () => {
         await game.run();
     })
 
-    afterEach(() => {
+    afterEach(async () => {
         if(game)
-            game.stop();
+            await game.stop();
     })
 
-    after(() => {
+    after(async () => {
         if(game)
-            game.stop();
+            await game.stop();
+        await ExpressGameServer.stop()
     })
 
     it('should have start game engine server', async() => {
-        const result = await axios.get('http://localhost:3000/scenes/');
+        const result = await axios.get(`http://localhost:3000/${game.id}/`);
         expect(result.status).to.eql(200);
         expect(result.statusText).to.eql('OK');
     })

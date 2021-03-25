@@ -7,19 +7,22 @@ import * as path from 'path';
 import {ExpressGameServer} from "./server/ExpressGameServer";
 import {Scene} from "./Scene";
 const promisify = util.promisify;
+import {v4 as guid} from 'uuid';
 
 export class GameEngine extends EventEmitter {
 
     private timer:Timeout | null;
     private frameState: Date;
     private server?: ExpressGameServer;
-    private scenes:Scene[];
+    private readonly scenes:Scene[];
+    id:string;
 
     constructor() {
         super();
         this.timer = null;
         this.frameState = new Date();
         this.scenes = [];
+        this.id = guid();
     }
 
     async init():Promise<void> {
@@ -48,7 +51,8 @@ export class GameEngine extends EventEmitter {
         await loadScenePromise;
         const current = this;
         //TODO use a factory to create the right server with the
-        this.server = new ExpressGameServer(() => {
+        this.server = new ExpressGameServer(this.id,() => {
+            //TODO : get the active scene
             console.log(`Getting Framestate ${this.frameState}`);
             return current.frameState;
         })
