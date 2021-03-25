@@ -74,4 +74,18 @@ export class Entity extends events.EventEmitter {
             b.contractName === name
         ) as T;
     }
+
+    serialize():SerializedEntityContract {
+        const toReturn:SerializedEntityContract = {
+            components: [],
+            behaviors: []
+        }
+        for(const component of this.components){
+            toReturn.components.push(component.serialize())
+        }
+        for(const behavior of this.behaviors) {
+            toReturn.behaviors.push(behavior.serialize())
+        }
+        return toReturn;
+    }
 }

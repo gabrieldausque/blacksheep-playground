@@ -7,6 +7,7 @@ import {BodyComponent, Scene, SerializedSceneContract} from "../src";
 describe('Scene Tests',() => {
 
     const aSceneSerialized:SerializedSceneContract = {
+        order:0,
         entities: [
             {
                 components: [

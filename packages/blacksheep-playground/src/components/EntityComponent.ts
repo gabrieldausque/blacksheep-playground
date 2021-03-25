@@ -9,8 +9,8 @@ export interface EntityComponentContract {
 
 export abstract class EntityComponent implements EntityComponentContract {
 
-    serialize():string {
-        return JSON.stringify(this);
+    serialize():EntityComponentContract {
+        return {...this};
     }
 
     static deserialize(serializedComponent:string | EntityComponentContract):EntityComponent{

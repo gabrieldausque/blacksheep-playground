@@ -2,6 +2,7 @@ import {Entity, SerializedEntityContract} from "./Entity";
 import * as events from 'events';
 
 export interface SerializedSceneContract {
+    order:number,
     entities:Array<SerializedEntityContract>
 }
 
@@ -18,14 +19,31 @@ export class Scene extends events.EventEmitter{
         return scene;
     }
 
+    serialize():SerializedSceneContract {
+        const toReturn:SerializedSceneContract = {
+            order: this.order,
+            entities: []
+        }
+        for(const entity of this.entities) {
+            toReturn.entities.push(entity.serialize())
+        }
+        return toReturn
+    }
+
     /**
      * List of entities of the current scene
      */
     entities: Entity[];
 
+    /**
+     * The scene order number
+     */
+    order:number;
+
     constructor() {
         super();
         this.entities = []
+        this.order = 0;
     }
 
     /**

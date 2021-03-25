@@ -4,12 +4,13 @@ import {Entity} from "../Entity";
 export interface BehaviorContract {
     contractType:string;
     contractName:string;
+    [propName:string] : any;
 }
 
 export abstract class Behavior implements BehaviorContract {
 
-    serialize():string {
-        return JSON.stringify(this);
+    serialize():BehaviorContract {
+        return {...this};
     }
 
     static deserialize(serializedBehavior:string|BehaviorContract):Behavior{
@@ -23,12 +24,10 @@ export abstract class Behavior implements BehaviorContract {
 
     contractType:string;
     contractName:string;
-    subscribedEvents:string[];
 
     protected constructor(metadata:ExportMetadata) {
         this.contractType = metadata.contractType;
         this.contractName = metadata.contractName;
-        this.subscribedEvents = [];
     }
 
     abstract execute(owner:Entity):Promise<void>
