@@ -3,6 +3,7 @@ import * as http from "http";
 import {Server, Socket} from "socket.io";
 import EventEmitter from "events";
 import {SerializedSceneContract} from "../Scene";
+import * as path from "path";
 
 export interface GameServer {
     stop():Promise<void>;
@@ -30,8 +31,15 @@ export class ExpressGameServer
         if(!ExpressGameServer.app){
             ExpressGameServer.app = express()
             ExpressGameServer.app.use(express.static('public'))
-            ExpressGameServer.app.get('/', (req:Request, res:Response) => {
-                res.sendFile('index.html');
+            ExpressGameServer.app.use('/', (req:Request, res:Response) => {
+                let indexPath = '';
+                if(req.path === '/client.js'){
+                    indexPath = path.resolve(`${__dirname}/../client/Client.js`);
+                } else {
+                    indexPath = path.resolve(`${__dirname}/../screen/index.html`);
+                }
+                res.sendFile(indexPath);
+
             })
             ExpressGameServer.server = ExpressGameServer.app.listen(3000, () => {
                 console.log('listening to player connection');

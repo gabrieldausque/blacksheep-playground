@@ -10,7 +10,9 @@
     "strict": true,
     "moduleResolution": "node",
     "esModuleInterop": true,
-    "lib": ["ES2020", "ES2020.Promise"]
+    "lib": ["ES2020", "ES2020.Promise"],
+    "declaration": true,
+    "declarationMap": true
   },
   "exclude": [
     "node_modules",

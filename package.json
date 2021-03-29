@@ -3,11 +3,13 @@
   "version": "1.0.0",
   "description": "Blacksheep video game engine using electron",
   "devDependencies": {
-    "lerna": "^3.22.1"
+    "lerna": "^3.22.1",
+    "webpack-cli": "^4.6.0"
   },
   "scripts": {
     "bootstrap": "lerna bootstrap --hoist --force-local",
     "compile": "lerna run compile",
-    "start": "lerna run compile && lerna run start --stream"
+    "start": "lerna run build && lerna run start --stream",
+    "build": "lerna run build"
   }
 }

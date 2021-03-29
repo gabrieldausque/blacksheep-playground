@@ -1,13 +1,11 @@
 {
   "compilerOptions": {
     "module": "commonjs",
-    "target": "es6",
+    "target": "ES2020",
+    "allowSyntheticDefaultImports": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "sourceMap": true,
-    "typeRoots": [
-      "node_modules/@types"
-    ],
     "outDir": "./dist",
     "rootDir": "./src",
     "strict": true,

@@ -4,9 +4,10 @@
   "description": "A game engine in full typescript",
   "main": "dist/index.js",
   "scripts": {
-    "compile": "./node_modules/.bin/tsc",
+    "compile": "shx rm -rf ./dist && ./node_modules/.bin/tsc",
     "test": "npm run compile && npm run mocha",
-    "mocha": "mocha --require ts-node/register test/**/*.test.ts"
+    "mocha": "mocha --require ts-node/register test/**/*.test.ts",
+    "build": "npm run compile && shx cp -rf ./src/screen ./dist"
   },
   "dependencies": {
     "express": "^4.17.1",
@@ -31,7 +32,8 @@
     "@types/chai-as-promised": "^7.1.3",
     "@types/axios": "^0.14.0",
     "@types/uuid": "^8.3.0",
-    "@types/socket.io": "^2.1.13"
+    "@types/socket.io": "^2.1.13",
+    "shx": "^0.3.3"
   },
   "keywords": [
     "game",
