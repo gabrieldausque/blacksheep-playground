@@ -7,14 +7,17 @@
     "compile": "shx rm -rf ./dist && ./node_modules/.bin/tsc",
     "test": "npm run compile && npm run mocha",
     "mocha": "mocha --require ts-node/register test/**/*.test.ts",
-    "build": "npm run compile && shx cp -rf ./src/screen ./dist"
+    "copy-client": "shx mkdir ./dist/client && shx cp ./node_modules/@blacksheep/playground-client/dist/blacksheep-playground-client.js* ./dist/client",
+    "build": "npm run compile && shx cp -rf ./src/screen ./dist && npm run copy-client"
   },
   "dependencies": {
     "express": "^4.17.1",
     "config": "^3.3.3",
     "uuid": "^8.3.2",
     "socket.io": "^3.1.2",
-    "@hermes/composition": "^2.0.7"
+    "@hermes/composition": "^2.0.7",
+    "@blacksheep/playground-client": "^0.0.0",
+    "node_modules-path": "^2.0.5"
   },
   "devDependencies": {
     "typescript": "^4.1.3",

@@ -4,6 +4,7 @@ import {Server, Socket} from "socket.io";
 import EventEmitter from "events";
 import {SerializedSceneContract} from "../Scene";
 import * as path from "path";
+const nodeModules = require('node_modules-path');
 
 export interface GameServer {
     stop():Promise<void>;
@@ -34,7 +35,7 @@ export class ExpressGameServer
             ExpressGameServer.app.use('/', (req:Request, res:Response) => {
                 let indexPath = '';
                 if(req.path === '/client.js'){
-                    indexPath = path.resolve(`${__dirname}/../client/Client.js`);
+                    indexPath = path.resolve(`${__dirname}/../client/blacksheep-playground-client.js`);
                 } else {
                     indexPath = path.resolve(`${__dirname}/../screen/index.html`);
                 }

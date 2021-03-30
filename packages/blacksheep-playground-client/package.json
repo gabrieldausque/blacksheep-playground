@@ -1,0 +1,19 @@
+{
+  "name": "@blacksheep/playground-client",
+  "version": "0.0.0",
+  "description": "The client side of the blacksheep playground game engine",
+  "main": "dist/blacksheep-playground-client.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "compile": "shx rm -rf dist && node_modules/.bin/tsc",
+    "build": "npm run compile && webpack"
+  },
+  "author": "gabrieldausque.pro@gmail.com",
+  "license": "ISC",
+  "devDependencies": {
+    "typescript": "^4.2.3",
+    "webpack": "^5.28.0",
+    "ts-loader": "^8.1.0",
+    "terser-webpack-plugin": "^5.1.1"
+  }
+}
