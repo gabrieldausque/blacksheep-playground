@@ -13,8 +13,8 @@ export interface GameServer {
 export class ExpressGameServer
     extends EventEmitter
     implements GameServer {
-    private static app: Express;
-    private static server: http.Server;
+    static app: Express;
+    static server: http.Server;
     private static serverSocket: Server;
     private readonly gameId: string;
 
@@ -25,22 +25,23 @@ export class ExpressGameServer
             })
     }
 
-    //TODO define the scene serialized contract to define the type for the sceneEndPoint
-    constructor(gameId:string, gameEndpoint:any) {
-        super();
-        this.gameId = gameId;
+    static initApplication() {
         if(!ExpressGameServer.app){
             ExpressGameServer.app = express()
-            ExpressGameServer.app.use(express.static('public'))
-            ExpressGameServer.app.use('/', (req:Request, res:Response) => {
+            ExpressGameServer.app.use(express.static('public'));
+            ExpressGameServer.app.get(/scripts\/.+js$/,(req:Request, res:Response) => {
                 let indexPath = '';
-                if(req.path === '/client.js'){
+                if(req.path === '/scripts/client.js'){
                     indexPath = path.resolve(`${__dirname}/../client/blacksheep-playground-client.js`);
-                } else {
-                    indexPath = path.resolve(`${__dirname}/../screen/index.html`);
+                    res.sendFile(indexPath);
+                    return;
                 }
+                res.status(404).send(`Script ${req.path} not found.`);
+            })
+            ExpressGameServer.app.get('/', (req:Request, res:Response) => {
+                let indexPath = '';
+                indexPath = path.resolve(`${__dirname}/../screen/index.html`);
                 res.sendFile(indexPath);
-
             })
             ExpressGameServer.server = ExpressGameServer.app.listen(3000, () => {
                 console.log('listening to player connection');
@@ -48,6 +49,13 @@ export class ExpressGameServer
             //TODO : open socket io endpoint to notify each client the change of state for each entities
             ExpressGameServer.serverSocket = new Server(ExpressGameServer.server);
         }
+    }
+
+    //TODO define the scene serialized contract to define the type for the sceneEndPoint
+    constructor(gameId:string, gameEndpoint:any) {
+        super();
+        this.gameId = gameId;
+        ExpressGameServer.initApplication();
         ExpressGameServer.app.get(`/${gameId}`, (req:Request, res:Response) => {
             res.send(gameEndpoint());
         })

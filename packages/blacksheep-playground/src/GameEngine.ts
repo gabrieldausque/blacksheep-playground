@@ -70,6 +70,10 @@ export class GameEngine extends EventEmitter {
         this.currentScene = this.scenes[0];
     }
 
+    getCurrentScene():string | undefined {
+        return this.currentScene? JSON.stringify(this.currentScene.serialize()): undefined;
+    }
+
     async run() {
         await this.init()
         //TODO : Do the game cycle

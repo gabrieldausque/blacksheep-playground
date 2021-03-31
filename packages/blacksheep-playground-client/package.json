@@ -10,7 +10,11 @@
   },
   "author": "gabrieldausque.pro@gmail.com",
   "license": "ISC",
+  "dependencies": {
+    "axios": "^0.21.1"
+  },
   "devDependencies": {
+    "@types/axios": "^0.14.0",
     "typescript": "^4.2.3",
     "webpack": "^5.28.0",
     "ts-loader": "^8.1.0",
