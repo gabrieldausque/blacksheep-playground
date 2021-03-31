@@ -56,13 +56,22 @@ export class ExpressGameServer
         super();
         this.gameId = gameId;
         ExpressGameServer.initApplication();
-        ExpressGameServer.app.get(`/${gameId}`, (req:Request, res:Response) => {
+        ExpressGameServer.app.get(`/Game/${gameId}`, (req:Request, res:Response) => {
             res.send(gameEndpoint());
         })
 
         ExpressGameServer.serverSocket.on(`${gameId}.Client.Update`, (data) => {
             //TODO : push update to the client server object update state queue, to be applied on update cycle ;
             this.emit('Client.Update',data);
+        })
+
+        ExpressGameServer.serverSocket.on('connection', (socket) => {
+            socket.on('Join',(a:any,b:any) => {
+                if(a === this.gameId) {
+                    this.emit('Join', b);
+                    socket.join(this.gameId);
+                }
+            })
         })
     }
 
@@ -73,11 +82,7 @@ export class ExpressGameServer
         })
     }
 
-    async sendUpdate(frame:{
-        frameState:Date,
-        scene:SerializedSceneContract
-                     }) {
+    async sendUpdate(frame: { gameId: string; frameState: Date; scene: SerializedSceneContract | undefined }) {
         ExpressGameServer.serverSocket.to(this.gameId).emit('Update', frame);
     }
-
 }

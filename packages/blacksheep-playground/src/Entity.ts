@@ -4,6 +4,7 @@ import {Behavior, BehaviorContract} from "./behaviors/Behavior";
 import {v4 as uuid} from 'uuid';
 
 export interface SerializedEntityContract {
+    id:string,
     components:Array<EntityComponentContract>,
     behaviors:Array<BehaviorContract>
 }
@@ -77,6 +78,7 @@ export class Entity extends events.EventEmitter {
 
     serialize():SerializedEntityContract {
         const toReturn:SerializedEntityContract = {
+            id: this.id,
             components: [],
             behaviors: []
         }

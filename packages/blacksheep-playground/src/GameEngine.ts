@@ -29,7 +29,7 @@ export class GameEngine extends EventEmitter {
     async init():Promise<void> {
         //Load all available scenes from files
         const loadScenePromise = new Promise<void>((resolve, reject) => {
-            fs.readdir('scenes', (async (err, files) => {
+            fs.readdir( `${process.cwd()}/scenes`, (async (err, files) => {
                 for(let sceneIndex = 0;sceneIndex < files.length; sceneIndex++){
                     let sceneFile = files[sceneIndex];
                     if(sceneFile){
@@ -60,6 +60,9 @@ export class GameEngine extends EventEmitter {
         this.server.on('Client.Update', () => {
             //TODO : Push new state from client to update queue, to be applied to correct entity
         })
+        this.server.on('Join', (player?) => {
+            console.log(`A player as join the game ${this.id}`);
+        })
         this.scenes.sort((s1:Scene, s2:Scene) => {
             if(s1.order > s2.order)
                 return 1;
@@ -86,8 +89,10 @@ export class GameEngine extends EventEmitter {
             await this.currentScene.update();
             //TODO : send update to client
             await this.server.sendUpdate({
+                gameId:this.id,
                 frameState:this.frameState,
                 scene:this.currentScene?.serialize()
+
             });
         }
     }

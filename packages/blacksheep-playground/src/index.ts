@@ -15,13 +15,11 @@ globalInstancesFactory.loadExportedClassesFromDirectory(__dirname);
 ExpressGameServer.initApplication();
 const runningGames = new Array<GameEngine>()
 ExpressGameServer.app.post('/Game', async (req:Request, res:Response) => {
+    const game = new GameEngine();
     //TODO : add the player from the request on the new GameEngine
-    if(req.method === 'POST' || req.method === 'post'){
-        const game = new GameEngine();
-        runningGames.push(game);
-        await game.run();
-        res.status(201).send(game.getCurrentScene());
-    }
+    runningGames.push(game);
+    await game.run();
+    res.status(201).send(game.id);
 });
 
 //TODO : manage the join Game endpoint

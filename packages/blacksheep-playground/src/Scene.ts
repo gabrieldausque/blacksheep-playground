@@ -13,6 +13,7 @@ export class Scene extends events.EventEmitter{
             JSON.parse(serializedScene) as SerializedSceneContract:
             serializedScene;
         const scene = new Scene();
+        scene.order = deserializedSceneContract.order;
         for(const serializedEntity of deserializedSceneContract.entities){
             scene.addEntity(Entity.deserialize(serializedEntity));
         }
