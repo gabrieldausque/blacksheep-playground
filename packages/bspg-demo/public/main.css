@@ -1,0 +1,30 @@
+body {
+    margin:0;
+}
+
+#screen {
+    position: relative;
+    background: black;
+    height:1024px;
+    width:1980px;
+}
+
+#screen div {
+    position: absolute;
+}
+
+.title {
+    color: white;
+    font-family: CustomFont;
+    font-size: 25vh;
+    right:0;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 5vh;
+}
+
+
+@font-face {
+    font-family: "CustomFont";
+    src: url("/public/Adventure.otf");
+}

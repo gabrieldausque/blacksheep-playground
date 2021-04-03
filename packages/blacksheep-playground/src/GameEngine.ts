@@ -54,7 +54,6 @@ export class GameEngine extends EventEmitter {
         //TODO use a factory to create the right server with the
         this.server = new ExpressGameServer(this.id,() => {
             //TODO : get the active scene
-            console.log(`Getting Framestate ${this.frameState}`);
             return current.frameState;
         })
         this.server.on('Client.Update', () => {
@@ -62,6 +61,7 @@ export class GameEngine extends EventEmitter {
         })
         this.server.on('Join', (player?) => {
             console.log(`A player as join the game ${this.id}`);
+            this.server?.send('Joined', this.currentScene?.serialize())
         })
         this.scenes.sort((s1:Scene, s2:Scene) => {
             if(s1.order > s2.order)

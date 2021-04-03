@@ -3,6 +3,7 @@ import * as events from 'events';
 
 export interface SerializedSceneContract {
     order:number,
+    key:string,
     entities:Array<SerializedEntityContract>
 }
 
@@ -14,6 +15,7 @@ export class Scene extends events.EventEmitter{
             serializedScene;
         const scene = new Scene();
         scene.order = deserializedSceneContract.order;
+        scene.key = deserializedSceneContract.key;
         for(const serializedEntity of deserializedSceneContract.entities){
             scene.addEntity(Entity.deserialize(serializedEntity));
         }
@@ -22,6 +24,7 @@ export class Scene extends events.EventEmitter{
 
     serialize():SerializedSceneContract {
         const toReturn:SerializedSceneContract = {
+            key: this.key?this.key:'',
             order: this.order,
             entities: []
         }
@@ -40,6 +43,11 @@ export class Scene extends events.EventEmitter{
      * The scene order number
      */
     order:number;
+
+    /**
+     *
+     */
+    key?: string;
 
     constructor() {
         super();

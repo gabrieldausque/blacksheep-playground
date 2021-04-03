@@ -21,9 +21,12 @@ export class MoveBehavior extends Behavior {
         const bodyComponent:BodyComponent | undefined = owner.getComponent<BodyComponent>('Body');
         const speedComponent:SpeedComponent | undefined = owner.getComponent<SpeedComponent>('Speed');
         if(bodyComponent && speedComponent){
-            bodyComponent.position.x += speedComponent.speeds.x;
-            bodyComponent.position.y += speedComponent.speeds.y;
-            bodyComponent.position.z += speedComponent.speeds.z;
+            if(typeof bodyComponent.position.x === 'number')
+                bodyComponent.position.x += speedComponent.speeds.x;
+            if(typeof bodyComponent.position.y === 'number')
+                bodyComponent.position.y += speedComponent.speeds.y;
+            if(typeof bodyComponent.position.z === 'number')
+                bodyComponent.position.z += speedComponent.speeds.z;
         }
     }
 

@@ -28,7 +28,7 @@ export class ExpressGameServer
     static initApplication() {
         if(!ExpressGameServer.app){
             ExpressGameServer.app = express()
-            ExpressGameServer.app.use(express.static('public'));
+            ExpressGameServer.app.use('/public', express.static('public'));
             ExpressGameServer.app.get(/scripts\/.+js$/,(req:Request, res:Response) => {
                 let indexPath = '';
                 if(req.path === '/scripts/client.js'){
@@ -68,8 +68,8 @@ export class ExpressGameServer
         ExpressGameServer.serverSocket.on('connection', (socket) => {
             socket.on('Join',(a:any,b:any) => {
                 if(a === this.gameId) {
-                    this.emit('Join', b);
                     socket.join(this.gameId);
+                    this.emit('Join', b);
                 }
             })
         })
@@ -84,5 +84,9 @@ export class ExpressGameServer
 
     async sendUpdate(frame: { gameId: string; frameState: Date; scene: SerializedSceneContract | undefined }) {
         ExpressGameServer.serverSocket.to(this.gameId).emit('Update', frame);
+    }
+
+    async send(event:string, object:any):Promise<void>{
+        ExpressGameServer.serverSocket.to(this.gameId).emit(event,object);
     }
 }

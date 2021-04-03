@@ -10,8 +10,8 @@ export class BodyComponent extends EntityComponent {
         }
     ]
 
-    position:{ x:number, y:number, z:number}
-    size: {width:number, height:number, depth:number}
+    position:{ x:number|string, y:number|string, z:number|string}
+    size: {width:number|string, height:number|string, depth:number|string}
 
     constructor() {
         super(BodyComponent.metadata[0])

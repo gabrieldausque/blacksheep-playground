@@ -1,5 +1,6 @@
 {
   "order": 0,
+  "key":"menu",
   "entities": [
     {
       "components": [
@@ -8,6 +9,28 @@
           "contractName":"Body",
           "position": {"x": 0, "y":0, "z":0},
           "size": {"width":1980, "height":1024, "depth":0}
+        }
+      ],
+      "behaviors":[
+      ]
+    },
+    {
+      "components": [
+        {
+          "contractType":"Component",
+          "contractName":"Body",
+          "position": {"x": 0, "y":0, "z":1},
+          "size": {"width":"50%", "height":"25%", "depth":0}
+        },
+        {
+          "contractType":"Component",
+          "contractName":"Text",
+          "text": "BombJack"
+        },
+        {
+          "contractType":"Component",
+          "contractName":"Css",
+          "classes": ["title"]
         }
       ],
       "behaviors":[
