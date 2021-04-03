@@ -46,7 +46,7 @@ export class GameEngineProxy {
             const screen = document.getElementById('screen');
 
             if(screen){
-                const newTransform = 'scale(' + (window.innerWidth/screen.scrollWidth) + ')';
+                const newTransform = 'scale(' + (window.innerWidth/(screen.scrollWidth)) + ')';
                 if(screen.style.transformOrigin !== 'left center')
                     screen.style.transformOrigin = 'left center';
                 if(screen.style.transform !== newTransform)

@@ -1,12 +1,16 @@
 body {
+    max-height:100vh;
+    max-width:100vw;
+    overflow: hidden;
+    background: dimgray;
     margin:0;
 }
 
 #screen {
     position: relative;
     background: black;
-    height:1024px;
-    width:1980px;
+    height:1080px;
+    width:1920px;
 }
 
 #screen div {

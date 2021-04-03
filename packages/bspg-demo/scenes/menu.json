@@ -8,7 +8,7 @@
           "contractType":"Component",
           "contractName":"Body",
           "position": {"x": 0, "y":0, "z":0},
-          "size": {"width":1980, "height":1024, "depth":0}
+          "size": {"width":1920, "height":1080, "depth":0}
         }
       ],
       "behaviors":[
@@ -20,7 +20,7 @@
           "contractType":"Component",
           "contractName":"Body",
           "position": {"x": 0, "y":0, "z":1},
-          "size": {"width":"50%", "height":"25%", "depth":0}
+          "size": {"width":1102, "height":50, "depth":0}
         },
         {
           "contractType":"Component",
