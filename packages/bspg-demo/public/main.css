@@ -17,16 +17,44 @@ body {
     position: absolute;
 }
 
+@property --x {
+    syntax: '<percentage>';
+    inherits: false;
+    initial-value: 0%;
+}
+
 .title {
-    color: white;
+    background: radial-gradient(circle at var(--x) 0%, yellow 0%, red 100%);
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
     font-family: CustomFont;
     font-size: 25vh;
     right:0;
     margin-left: auto;
     margin-right: auto;
     margin-top: 5vh;
+    animation: titleAnimation infinite 2s;
+    text-align: center;
 }
 
+@keyframes titleAnimation {
+    0% {
+        --x:0%;
+    }
+    25% {
+        --x:50%;
+    }
+    50% {
+        --x:100%;
+    }
+    75% {
+        --x:50%;
+    }
+    100%{
+        --x:0%;
+    }
+}
 
 @font-face {
     font-family: "CustomFont";
