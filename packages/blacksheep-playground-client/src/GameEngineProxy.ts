@@ -24,6 +24,7 @@ export class GameEngineProxy {
         this.gameId = response.data;
         this.socket = io(this.url.replace('http','ws'));
         this.socket.on('Joined',async(playerId: string, object:any) => {
+            console.log('Joined');
             //receive current scene state
             this.playerId = playerId;
             console.log(`Joining with player id ${playerId}`);

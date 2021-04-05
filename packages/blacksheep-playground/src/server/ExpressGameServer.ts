@@ -74,7 +74,9 @@ export class ExpressGameServer
             socket.on('Join',(a:any) => {
                 if(a === this.gameId) {
                     socket.join(this.gameId);
-                    this.emit('Join', guid());
+                    const playerId = guid();
+                    this.socketByPlayers[playerId] = socket;
+                    this.emit('Join', playerId);
                 }
             })
         })
