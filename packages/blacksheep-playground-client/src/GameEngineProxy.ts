@@ -9,6 +9,7 @@ export class GameEngineProxy {
     private gameId?:string;
     private socket:any;
     private entities:Array<EntityProxy>;
+    private playerId?:string;
 
     constructor(url?:string) {
         this.url = url?url:window.location.origin;
@@ -22,8 +23,10 @@ export class GameEngineProxy {
         )
         this.gameId = response.data;
         this.socket = io(this.url.replace('http','ws'));
-        this.socket.on('Joined',async(object:any) => {
+        this.socket.on('Joined',async(playerId: string, object:any) => {
             //receive current scene state
+            this.playerId = playerId;
+            console.log(`Joining with player id ${playerId}`);
             let sceneCss = <HTMLLinkElement>document.getElementById('current-scene');
             if(!sceneCss)
             {

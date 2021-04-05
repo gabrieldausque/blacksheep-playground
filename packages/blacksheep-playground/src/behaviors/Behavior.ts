@@ -17,6 +17,9 @@ export abstract class Behavior implements BehaviorContract {
         const deserializedContract:BehaviorContract = (typeof serializedBehavior === 'string')?
             JSON.parse(serializedBehavior) as BehaviorContract:
             serializedBehavior;
+        deserializedContract.contractType = deserializedContract.contractType?
+            deserializedContract.contractType:
+            'Behavior';
         return globalInstancesFactory.getInstanceFromCatalogs(
             deserializedContract.contractType,
             deserializedContract.contractName) as Behavior;

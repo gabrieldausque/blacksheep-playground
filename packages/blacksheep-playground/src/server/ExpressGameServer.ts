@@ -5,6 +5,7 @@ import EventEmitter from "events";
 import {SerializedSceneContract} from "../Scene";
 import * as path from "path";
 const nodeModules = require('node_modules-path');
+import {v4 as guid} from 'uuid';
 
 export interface GameServer {
     stop():Promise<void>;
@@ -17,6 +18,9 @@ export class ExpressGameServer
     static server: http.Server;
     private static serverSocket: Server;
     private readonly gameId: string;
+    private socketByPlayers: {
+        [playerId:string] : Socket;
+    }
 
     static async stop():Promise<void> {
         if(ExpressGameServer.server)
@@ -55,6 +59,7 @@ export class ExpressGameServer
     constructor(gameId:string, gameEndpoint:any) {
         super();
         this.gameId = gameId;
+        this.socketByPlayers = {};
         ExpressGameServer.initApplication();
         ExpressGameServer.app.get(`/Game/${gameId}`, (req:Request, res:Response) => {
             res.send(gameEndpoint());
@@ -66,10 +71,10 @@ export class ExpressGameServer
         })
 
         ExpressGameServer.serverSocket.on('connection', (socket) => {
-            socket.on('Join',(a:any,b:any) => {
+            socket.on('Join',(a:any) => {
                 if(a === this.gameId) {
                     socket.join(this.gameId);
-                    this.emit('Join', b);
+                    this.emit('Join', guid());
                 }
             })
         })
@@ -86,7 +91,13 @@ export class ExpressGameServer
         ExpressGameServer.serverSocket.to(this.gameId).emit('Update', frame);
     }
 
-    async send(event:string, object:any):Promise<void>{
-        ExpressGameServer.serverSocket.to(this.gameId).emit(event,object);
+    async send(event:string, ...objects:any):Promise<void>{
+        ExpressGameServer.serverSocket.to(this.gameId).emit(event,...objects);
+    }
+
+    async sendToPlayer(playerId:string, eventName:string, ...objects:any){
+        if(this.socketByPlayers.hasOwnProperty(playerId)){
+            this.socketByPlayers[playerId].emit(eventName, playerId, ...objects);
+        }
     }
 }

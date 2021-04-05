@@ -1,33 +1,26 @@
 {
   "order": 0,
   "key":"menu",
+  "playerTemplate": {
+    "components": [],
+    "behaviors": [{
+      "contractName": "ClientEventListener",
+      "eventName": "KeyPressed"
+    }]
+  },
   "entities": [
     {
       "components": [
         {
-          "contractType":"Component",
-          "contractName":"Body",
-          "position": {"x": 0, "y":0, "z":0},
-          "size": {"width":1920, "height":1080, "depth":0}
-        }
-      ],
-      "behaviors":[]
-    },
-    {
-      "components": [
-        {
-          "contractType":"Component",
           "contractName":"Body",
           "position": {"x": 0, "y":0, "z":1},
           "size": {"width":1920, "height":325, "depth":0}
         },
         {
-          "contractType":"Component",
           "contractName":"Text",
           "text": "BombJack"
         },
         {
-          "contractType":"Component",
           "contractName":"Css",
           "classes": ["title"]
         }

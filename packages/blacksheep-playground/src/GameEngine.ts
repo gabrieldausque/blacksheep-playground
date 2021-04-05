@@ -17,6 +17,7 @@ export class GameEngine extends EventEmitter {
     private readonly scenes:Scene[];
     id:string;
     private currentScene?: Scene;
+    private players:string[];
 
     constructor() {
         super();
@@ -24,6 +25,7 @@ export class GameEngine extends EventEmitter {
         this.frameState = new Date();
         this.scenes = [];
         this.id = guid();
+        this.players = [];
     }
 
     async init():Promise<void> {
@@ -59,9 +61,10 @@ export class GameEngine extends EventEmitter {
         this.server.on('Client.Update', () => {
             //TODO : Push new state from client to update queue, to be applied to correct entity
         })
-        this.server.on('Join', (player?) => {
+        this.server.on('Join', (playerId:string) => {
             console.log(`A player as join the game ${this.id}`);
-            this.server?.send('Joined', this.currentScene?.serialize())
+            this.players.push(playerId);
+            this.server?.sendToPlayer(playerId,'Joined', this.currentScene?.serialize())
         })
         this.scenes.sort((s1:Scene, s2:Scene) => {
             if(s1.order > s2.order)
@@ -92,7 +95,6 @@ export class GameEngine extends EventEmitter {
                 gameId:this.id,
                 frameState:this.frameState,
                 scene:this.currentScene?.serialize()
-
             });
         }
     }

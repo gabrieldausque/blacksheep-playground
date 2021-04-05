@@ -17,6 +17,7 @@ export abstract class EntityComponent implements EntityComponentContract {
         const deserializeObject:EntityComponentContract = (typeof serializedComponent === 'string')?
             JSON.parse(serializedComponent) as EntityComponentContract:
             serializedComponent;
+        deserializeObject.contractType = deserializeObject.contractType?deserializeObject.contractType:'Component';
         const concreteComponent:EntityComponent = globalInstancesFactory.getInstanceFromCatalogs(
             deserializeObject.contractType,
             deserializeObject.contractName
