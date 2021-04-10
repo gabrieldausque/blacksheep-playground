@@ -12,6 +12,7 @@ export * from './components';
 export * from './behaviors';
 
 globalInstancesFactory.loadExportedClassesFromDirectory(__dirname);
+
 const customBehaviorsDirectory = `${process.cwd()}/behaviors`;
 const customComponentsDirectory = `${process.cwd()}/components`;
 if(fs.existsSync(customBehaviorsDirectory)){

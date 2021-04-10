@@ -12,7 +12,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@blacksheep/playground": "^0.0.1"
+    "@blacksheep/playground": "^0.0.1",
+    "@hermes/composition": "^2.0.7"
   },
   "devDependencies": {
     "shx": "^0.3.3",
