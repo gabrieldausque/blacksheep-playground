@@ -1,16 +1,20 @@
 import { ExportMetadata, globalInstancesFactory } from "@hermes/composition";
 import {Entity} from "../Entity";
 
+export interface EventDescriptor {
+    eventName:string;
+    isGlobal:boolean;
+}
+
 export interface BehaviorContract {
     contractType:string;
     contractName:string;
-    reactOn:string[];
+    reactOn:EventDescriptor[];
     [propName:string] : any;
 
 }
 
 export abstract class Behavior implements BehaviorContract {
-
 
     serialize():BehaviorContract {
         return {...this};
@@ -30,9 +34,9 @@ export abstract class Behavior implements BehaviorContract {
 
     contractType:string;
     contractName:string;
-    reactOn:string[];
+    reactOn:EventDescriptor[];
 
-    protected constructor(metadata:ExportMetadata, reactOn:string[] = []) {
+    protected constructor(metadata:ExportMetadata, reactOn:EventDescriptor[] = []) {
         this.contractType = metadata.contractType;
         this.contractName = metadata.contractName;
         this.reactOn = reactOn

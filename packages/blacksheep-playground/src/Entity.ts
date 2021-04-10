@@ -70,8 +70,8 @@ export class Entity extends events.EventEmitter {
         if(!this.hasBehavior(behavior)) {
             this.behaviors.push(behavior);
             for(const eventListened of behavior.reactOn){
-                this.on(eventListened, (args) => {
-                    behavior.react(eventListened, this, args).catch(() => {
+                this.on(eventListened.eventName, (args) => {
+                    behavior.react(eventListened.eventName, this, args).catch(() => {
                         //do nothing
                     })
                 })

@@ -7,10 +7,15 @@ export interface Component {
     [propName:string] : any;
 }
 
+export interface EventDescriptor {
+    eventName:string;
+    isGlobal:boolean;
+}
+
 export interface Behavior {
     contractType:string;
     contractName:string;
-
+    reactOn:EventDescriptor[]
     [propName:string] : any;
 }
 
@@ -24,7 +29,7 @@ export class EntityProxy extends GameEventEmitter {
 
     id:string;
     components:Array<Component>
-    behaviors:Array<Component>
+    behaviors:Array<Behavior>
 
     constructor() {
         super();
@@ -52,12 +57,12 @@ export class EntityProxy extends GameEventEmitter {
             document.getElementById('screen').append(sprite);
             for(const behavior of this.behaviors){
                 if(Array.isArray(behavior.reactOn)){
-                    for(const eventName of behavior.reactOn){
-                        sprite.addEventListener(eventName, (arg) => {
-                            console.log('Emiting');
-                            console.log(arg);
+                    for(const event of behavior.reactOn){
+                        const eventEmitter = event.isGlobal ? document : sprite;
+                        eventEmitter.addEventListener(event.eventName, (arg) => {
+                            // TODO : convert the event based on eventName
                             this.emit('EventRaised', {
-                                eventName: eventName,
+                                eventName: event.eventName,
                                 eventSender: this.id,
                                 args: arg
                             })

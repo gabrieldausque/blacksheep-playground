@@ -12,7 +12,16 @@ export class PrintBehavior extends Behavior {
     ]
 
     constructor() {
-        super(PrintBehavior.metadata[0], ['click']);
+        super(PrintBehavior.metadata[0], [
+            {
+                eventName:'click',
+                isGlobal:false
+            },
+            {
+                eventName:'keyup',
+                isGlobal:true
+            }
+        ]);
     }
 
     execute(owner: Entity): Promise<void> {
@@ -21,6 +30,10 @@ export class PrintBehavior extends Behavior {
 
     async on_click(entity:Entity, arg:any):Promise<void>{
         console.log('on_click');
+    }
+
+    async on_keyup(entity:Entity, arg:any):Promise<void>{
+        console.log('on_keyup');
     }
 
 }
