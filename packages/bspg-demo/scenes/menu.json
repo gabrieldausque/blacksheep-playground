@@ -25,7 +25,11 @@
           "classes": ["title"]
         }
       ],
-      "behaviors":[]
+      "behaviors":[
+        {
+          "contractName": "Print"
+        }
+      ]
     }
   ]
 }

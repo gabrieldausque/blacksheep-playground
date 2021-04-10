@@ -1,5 +1,4 @@
 import axios, {AxiosInstance} from "axios";
-import EventEmitter = require("events");
 import  * as io from 'socket.io-client';
 import {EntityProxy} from "./EntityProxy";
 export class GameEngineProxy {
@@ -43,6 +42,9 @@ export class GameEngineProxy {
                 const e = new EntityProxy();
                 e.deserialize(entity)
                 this.entities.push(e)
+                e.on('EventRaised', async (arg) => {
+                    this.socket.emit('EventRaised',arg);
+                })
             }
         })
         this.socket.on('Update', async(event) => {
