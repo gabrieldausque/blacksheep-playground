@@ -34,6 +34,13 @@ export class Entity extends events.EventEmitter {
         this.id = uuid();
         this.components = new Array<EntityComponent>();
         this.behaviors = new Array<Behavior>();
+        this.on('EventRaised', (arg: {
+            eventName: string,
+            eventSender: string,
+            args: any
+        }) => {
+            this.emit(arg.eventName, arg.args);
+        })
     }
 
     async update(){
@@ -62,6 +69,13 @@ export class Entity extends events.EventEmitter {
     addBehavior(behavior: Behavior) {
         if(!this.hasBehavior(behavior)) {
             this.behaviors.push(behavior);
+            for(const eventListened of behavior.reactOn){
+                this.on(eventListened, (args) => {
+                    behavior.react(eventListened, this, args).catch(() => {
+                        //do nothing
+                    })
+                })
+            }
         }
     }
 

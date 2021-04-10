@@ -79,6 +79,9 @@ export class ExpressGameServer
                     this.emit('Join', playerId);
                 }
             })
+            socket.on('EventRaised', async (arg:any) => {
+                this.emit('EventRaised', arg);
+            })
         })
     }
 

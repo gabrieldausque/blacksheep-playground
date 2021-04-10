@@ -62,6 +62,15 @@ export class Scene extends events.EventEmitter{
     addEntity(entity:Entity){
         if(this.entities.indexOf(entity) < 0) {
             this.entities.push(entity);
+            this.on('EventRaised', (arg:{
+                eventName:string,
+                eventSender:string,
+                args:any
+            }) => {
+                if(entity.id === arg.eventSender){
+                    entity.emit('EventRaised', arg)
+                }
+            })
         }
     }
 

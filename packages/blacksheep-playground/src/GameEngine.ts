@@ -66,6 +66,9 @@ export class GameEngine extends EventEmitter {
             this.players.push(playerId);
             this.server?.sendToPlayer(playerId,'Joined', this.currentScene?.serialize())
         })
+        this.server.on('EventRaised', (arg) => {
+            this.currentScene?.emit('EventRaised',arg);
+        })
         this.scenes.sort((s1:Scene, s2:Scene) => {
             if(s1.order > s2.order)
                 return 1;
