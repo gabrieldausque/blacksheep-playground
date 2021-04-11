@@ -6,6 +6,8 @@ import {SerializedSceneContract} from "../Scene";
 import * as path from "path";
 const nodeModules = require('node_modules-path');
 import {v4 as guid} from 'uuid';
+import fs from "fs";
+import {GameEngine} from "../GameEngine";
 
 export interface GameServer {
     stop():Promise<void>;
@@ -29,7 +31,9 @@ export class ExpressGameServer
             })
     }
 
-    static initApplication() {
+    static runningGames:Array<GameEngine> = [];
+
+    static async initApplication() : Promise<void> {
         if(!ExpressGameServer.app){
             ExpressGameServer.app = express()
             ExpressGameServer.app.use('/public', express.static('public'));
@@ -47,10 +51,16 @@ export class ExpressGameServer
                 indexPath = path.resolve(`${__dirname}/../screen/index.html`);
                 res.sendFile(indexPath);
             })
+            ExpressGameServer.app.post('/Game', async (req:Request, res:Response) => {
+                const game = new GameEngine();
+                //TODO : add the player from the request on the new GameEngine
+                ExpressGameServer.runningGames.push(game);
+                await game.run();
+                res.status(201).send(game.id);
+            });
             ExpressGameServer.server = ExpressGameServer.app.listen(3000, () => {
                 console.log('listening to player connection');
             })
-            //TODO : open socket io endpoint to notify each client the change of state for each entities
             ExpressGameServer.serverSocket = new Server(ExpressGameServer.server);
         }
     }
@@ -60,7 +70,7 @@ export class ExpressGameServer
         super();
         this.gameId = gameId;
         this.socketByPlayers = {};
-        ExpressGameServer.initApplication();
+
         ExpressGameServer.app.get(`/Game/${gameId}`, (req:Request, res:Response) => {
             res.send(gameEndpoint());
         })
@@ -83,10 +93,11 @@ export class ExpressGameServer
                 this.emit('EventRaised', arg);
             })
         })
+
     }
 
     async stop():Promise<void> {
-        ExpressGameServer.app.use(`/${this.gameId}`, (req:Request, res:Response) => {
+        ExpressGameServer.app.get(`/Game/${this.gameId}`, (req:Request, res:Response) => {
             res.statusMessage = `the game with id ${this.gameId} is stopped`;
             res.status(404).end();
         })

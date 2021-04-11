@@ -1,43 +1,9 @@
-@property --r {
-    syntax: '<percentage>';
-    inherits: false;
-    initial-value: 0%;
-}
-
-@property --y {
-    syntax: '<percentage>';
-    inherits: false;
-    initial-value: 0%;
-}
-
-.title {
-    background: repeating-radial-gradient(circle, red, yellow var(--y));
-    background-clip: text;
-    -webkit-background-clip: text;
-    color: transparent;
-    font-size: 25vh;
-    right:0;
-    margin-left: auto;
-    margin-right: auto;
-    margin-top: 5vh;
-    animation: titleAnimation infinite 5s;
-    text-align: center;
-    font-family: CustomFont;
-}
-
-@keyframes titleAnimation {
-    0% {
-        --y:0%;
-    }
-    50% {
-        --y:25%;
-    }
-    100% {
-        --y:50%;
-    }
+@font-face {
+    font-family: "CustomFont";
+    src: url("/public/fonts/Adventure.otf");
 }
 
 @font-face {
-    font-family: "CustomFont";
-    src: url("/public/Adventure.otf");
+    font-family: "Menu";
+    src: url("/public/fonts/Retro-Gaming.ttf");
 }

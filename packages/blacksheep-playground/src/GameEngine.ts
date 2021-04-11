@@ -29,7 +29,23 @@ export class GameEngine extends EventEmitter {
     }
 
     async init():Promise<void> {
-        //Load all available scenes from files
+        await ExpressGameServer.initApplication();
+        this.server = new ExpressGameServer(this.id,() => {
+            //TODO : get the active scene
+            return current.frameState;
+        })
+        this.server.on('Client.Update', () => {
+            //TODO : Push new state from client to update queue, to be applied to correct entity
+        })
+        this.server.on('Join', (playerId:string) => {
+            console.log(`A player as join the game ${this.id}`);
+            this.players.push(playerId);
+            this.server?.sendToPlayer(playerId,'Joined', this.currentScene?.serialize())
+        })
+        this.server.on('EventRaised', (arg) => {
+            this.currentScene?.emit('EventRaised',arg);
+        })
+
         const loadScenePromise = new Promise<void>((resolve, reject) => {
             fs.readdir( `${process.cwd()}/scenes`, (async (err, files) => {
                 for(let sceneIndex = 0;sceneIndex < files.length; sceneIndex++){
@@ -53,22 +69,6 @@ export class GameEngine extends EventEmitter {
         })
         await loadScenePromise;
         const current = this;
-        //TODO use a factory to create the right server with the
-        this.server = new ExpressGameServer(this.id,() => {
-            //TODO : get the active scene
-            return current.frameState;
-        })
-        this.server.on('Client.Update', () => {
-            //TODO : Push new state from client to update queue, to be applied to correct entity
-        })
-        this.server.on('Join', (playerId:string) => {
-            console.log(`A player as join the game ${this.id}`);
-            this.players.push(playerId);
-            this.server?.sendToPlayer(playerId,'Joined', this.currentScene?.serialize())
-        })
-        this.server.on('EventRaised', (arg) => {
-            this.currentScene?.emit('EventRaised',arg);
-        })
         this.scenes.sort((s1:Scene, s2:Scene) => {
             if(s1.order > s2.order)
                 return 1;

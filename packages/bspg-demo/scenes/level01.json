@@ -1,49 +1,24 @@
 {
   "order": 1,
+  "key": "level1",
   "entities": [
     {
       "components": [
         {
-          "contractType":"Component",
           "contractName":"Body",
-          "position": {"x": 15, "y":15, "z":1},
-          "size": {"width":32, "height":32, "depth":0}
+          "position": {"x": 0, "y":0, "z":1},
+          "size": {"width":1920, "height":1080, "depth":0}
         },
         {
-          "contractType":"Component",
-          "contractName":"Speed",
-          "speeds": {"x": 10, "y":0, "z":0},
-          "maxSpeeds": {"x":10,"y":10,"z":10}
-        }
-      ],
-      "behaviors":[
-        {
-          "contractType":"Behavior",
-          "contractName":"Move"
-        }
-      ]
-    },
-    {
-      "components": [
-        {
-          "contractType":"Component",
-          "contractName":"Body",
-          "position": {"x": 0, "y":0, "z":0},
-          "size": {"width":32, "height":32, "depth":0}
+          "contractName":"Css",
+          "classes": ["LoadingScreen"]
         },
         {
-          "contractType":"Component",
-          "contractName":"Speed",
-          "speeds": {"x": 10, "y":0, "z":0},
-          "maxSpeeds": {"x":10,"y":10,"z":10}
+          "contractName": "HTML",
+          "content": "<div><div class=\"spinner\"></div><p>Loading ...</p></div>"
         }
       ],
-      "behaviors":[
-        {
-          "contractType":"Behavior",
-          "contractName":"Move"
-        }
-      ]
+      "behaviors": []
     }
   ]
 }

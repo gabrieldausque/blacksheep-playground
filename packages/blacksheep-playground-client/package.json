@@ -4,7 +4,6 @@
   "description": "The client side of the blacksheep playground game engine",
   "main": "dist/blacksheep-playground-client.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "compile": "shx rm -rf dist && node_modules/.bin/tsc",
     "build": "npm run compile && webpack"
   },

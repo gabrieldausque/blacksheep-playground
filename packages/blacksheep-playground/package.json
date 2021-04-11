@@ -6,7 +6,7 @@
   "scripts": {
     "compile": "shx rm -rf ./dist && ./node_modules/.bin/tsc",
     "test": "npm run compile && npm run mocha",
-    "mocha": "mocha --require ts-node/register test/**/*.test.ts",
+    "mocha": "mocha --require ts-node/register test/**/*.test.ts --exit",
     "copy-client": "shx mkdir ./dist/client && shx cp ./node_modules/@blacksheep/playground-client/dist/blacksheep-playground-client.js* ./dist/client",
     "build": "npm run compile && shx cp -rf ./src/screen ./dist && npm run copy-client"
   },
@@ -22,7 +22,7 @@
   "devDependencies": {
     "typescript": "^4.1.3",
     "electron": "^10.1.1",
-    "mocha": "^8.3.1",
+    "mocha": "^8.3.2",
     "chai": "^4.3.3",
     "chai-as-promised": "^7.1.1",
     "ts-mocha": "^8.0.0",

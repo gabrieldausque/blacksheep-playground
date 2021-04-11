@@ -8,8 +8,10 @@ describe('Scene Tests',() => {
 
     const aSceneSerialized:SerializedSceneContract = {
         order:0,
+        key:'aScene',
         entities: [
             {
+                id:'',
                 components: [
                     {
                         contractType:'Component',
@@ -27,11 +29,13 @@ describe('Scene Tests',() => {
                 behaviors:[
                     {
                         contractType:'Behavior',
-                        contractName:'Move'
+                        contractName:'Move',
+                        reactOn:[]
                     }
                 ]
             },
             {
+                id:'',
                 components: [
                     {
                         contractType:'Component',
@@ -49,7 +53,8 @@ describe('Scene Tests',() => {
                 behaviors:[
                     {
                         contractType:'Behavior',
-                        contractName:'Move'
+                        contractName:'Move',
+                        reactOn: []
                     }
                 ]
             }

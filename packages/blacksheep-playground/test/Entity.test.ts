@@ -7,6 +7,7 @@ import {Entity, MoveBehavior, SerializedEntityContract} from "../src";
 describe('Entity test',() => {
 
     const serializedEntityContract:SerializedEntityContract = {
+        id: '',
         components: [
             {
                 contractType:'Component',
@@ -24,7 +25,8 @@ describe('Entity test',() => {
         behaviors:[
             {
                 contractType:'Behavior',
-                contractName:'Move'
+                contractName:'Move',
+                reactOn:[]
             }
         ]
     }

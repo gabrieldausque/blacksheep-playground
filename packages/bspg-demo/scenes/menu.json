@@ -1,13 +1,6 @@
 {
   "order": 0,
   "key":"menu",
-  "playerTemplate": {
-    "components": [],
-    "behaviors": [{
-      "contractName": "ClientEventListener",
-      "eventName": "KeyPressed"
-    }]
-  },
   "entities": [
     {
       "components": [
@@ -30,6 +23,24 @@
           "contractName": "Print"
         }
       ]
+    },
+    {
+      "components": [
+        {
+          "contractName":"Body",
+          "position": {"x": 0, "y":600, "z":1},
+          "size": {"width":1920, "height":50, "depth":0}
+        },
+        {
+          "contractName":"Text",
+          "text": "Press [ENTER] to start game"
+        },
+        {
+          "contractName":"Css",
+          "classes": ["subtitle"]
+        }
+      ],
+      "behaviors": []
     }
   ]
 }

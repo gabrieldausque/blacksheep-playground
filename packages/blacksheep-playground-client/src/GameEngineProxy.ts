@@ -32,6 +32,7 @@ export class GameEngineProxy {
             {
                 sceneCss = <HTMLLinkElement>document.createElement('link');
                 sceneCss.id = 'current-scene';
+                sceneCss.rel = 'stylesheet';
                 document.querySelector('head').append(sceneCss);
             }
             if(object.key)

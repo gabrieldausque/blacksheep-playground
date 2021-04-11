@@ -76,9 +76,9 @@ export class EntityProxy extends GameEventEmitter {
         if(bodyComponent) {
             if(bodyComponent.position){
                 if(sprite.style.top !== bodyComponent.position.y)
-                    sprite.style.top = bodyComponent.position.y;
+                    sprite.style.top = bodyComponent.position.y + 'px';
                 if(sprite.style.left !== bodyComponent.position.x)
-                    sprite.style.left = bodyComponent.position.x;
+                    sprite.style.left = bodyComponent.position.x + 'px';
                 if(sprite.style.zIndex !== bodyComponent.position.z)
                     sprite.style.zIndex = bodyComponent.position.z;
             }
@@ -102,6 +102,11 @@ export class EntityProxy extends GameEventEmitter {
                 if(!sprite.classList.contains(c))
                     sprite.classList.add(c)
             }
+        }
+
+        const htmlComponent = this.components.find(c => c.contractName.toLowerCase() === 'html');
+        if(htmlComponent) {
+            sprite.innerHTML = htmlComponent.content;
         }
     }
 }

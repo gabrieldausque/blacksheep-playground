@@ -1,0 +1,66 @@
+@property --r {
+    syntax: '<percentage>';
+    inherits: false;
+    initial-value: 0%;
+}
+
+@property --y {
+    syntax: '<percentage>';
+    inherits: false;
+    initial-value: 0%;
+}
+
+.title {
+    background: repeating-radial-gradient(circle, red, yellow var(--y));
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
+    font-size: 25vh;
+    right:0;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 5vh;
+    animation: titleAnimation infinite 5s;
+    text-align: center;
+    font-family: CustomFont;
+}
+
+.subtitle {
+    color: transparent;
+    font-size: 5vh;
+    right:0;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 5vh;
+    text-align: center;
+    font-family: Menu;
+    color: white;
+    animation: blink 5s infinite;
+}
+
+@keyframes titleAnimation {
+    0% {
+        --y:0%;
+    }
+    50% {
+        --y:25%;
+    }
+    100% {
+        --y:50%;
+    }
+}
+
+@keyframes blink {
+    0% {
+        opacity: 0;
+    }
+    15%{
+       opacity:1;
+    }
+    85% {
+        opacity:1;
+    }
+    100%{
+        opacity:0;
+    }
+}

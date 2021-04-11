@@ -10,6 +10,7 @@
     "bootstrap": "lerna bootstrap --hoist",
     "compile": "lerna run compile",
     "start": "lerna run build && lerna run start --stream",
-    "build": "lerna run build"
+    "build": "lerna run build",
+    "test": "lerna run test --stream"
   }
 }

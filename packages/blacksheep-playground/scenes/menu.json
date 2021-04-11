@@ -8,11 +8,6 @@
           "contractName":"Body",
           "position": {"x": 0, "y":0, "z":0},
           "size": {"width":1980, "height":1024, "depth":0}
-        },
-        {
-          "contractType": "Style",
-          "contractName": "DirectStyle",
-          "value": "background: linear-gradient(light-blue, white);"
         }
       ],
       "behaviors":[

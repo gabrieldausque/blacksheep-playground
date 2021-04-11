@@ -15,19 +15,19 @@ describe('GameEngine tests', () => {
         await game.run();
     })
 
+    after(async () => {
+        if (game)
+            await game.stop();
+        await ExpressGameServer.stop()
+    })
+
     afterEach(async () => {
         if(game)
             await game.stop();
     })
 
-    after(async () => {
-        if(game)
-            await game.stop();
-        await ExpressGameServer.stop()
-    })
-
     it('should have start game engine server', async() => {
-        const result = await axios.get(`http://localhost:3000/${game.id}/`);
+        const result = await axios.get(`http://localhost:3000/Game/${game.id}/`);
         expect(result.status).to.eql(200);
         expect(result.statusText).to.eql('OK');
     })
@@ -35,7 +35,7 @@ describe('GameEngine tests', () => {
     it('should have a scene with two entities when game start', async() => {
         const scene = await game.getScene(0);
         expect(scene).to.be.instanceOf(Scene);
-        expect(scene.entities.length).to.eql(2);
+        expect(scene.entities.length).to.eql(1);
     })
 
 })
