@@ -27,9 +27,11 @@ export abstract class Behavior implements BehaviorContract {
         deserializedContract.contractType = deserializedContract.contractType?
             deserializedContract.contractType:
             'Behavior';
-        return globalInstancesFactory.getInstanceFromCatalogs(
+        const behavior = globalInstancesFactory.getInstanceFromCatalogs(
             deserializedContract.contractType,
             deserializedContract.contractName, deserializedContract.reactOn) as Behavior;
+        behavior.initAfterDeserialize();
+        return behavior;
     }
 
     contractType:string;
@@ -49,6 +51,10 @@ export abstract class Behavior implements BehaviorContract {
         if(typeof this[`on_${eventName}`] === 'function'){
             await this[`on_${eventName}`](owner, ...args);
         }
+    }
+
+    initAfterDeserialize() {
+        //Doing nothing, to override in derived class
     }
 
     [prop:string] : any;

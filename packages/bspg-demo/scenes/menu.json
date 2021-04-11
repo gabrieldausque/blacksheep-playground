@@ -18,11 +18,7 @@
           "classes": ["title"]
         }
       ],
-      "behaviors":[
-        {
-          "contractName": "Print"
-        }
-      ]
+      "behaviors":[]
     },
     {
       "components": [
@@ -40,7 +36,22 @@
           "classes": ["subtitle"]
         }
       ],
-      "behaviors": []
+      "behaviors": [{
+        "contractName": "Script",
+        "reactOn": ["keyup"],
+        "handlers": {
+          "keyup": [
+            "async (entity, arg) => {",
+              "switch(arg.key) {",
+                "case 'Enter': {"  ,
+                  "entity.emit('NextScene');",
+                  "return;",
+                "}",
+              "}",
+            "}"
+          ]
+        }
+      }]
     }
   ]
 }
