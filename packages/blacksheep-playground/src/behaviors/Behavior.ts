@@ -30,6 +30,11 @@ export abstract class Behavior implements BehaviorContract {
         const behavior = globalInstancesFactory.getInstanceFromCatalogs(
             deserializedContract.contractType,
             deserializedContract.contractName, deserializedContract.reactOn) as Behavior;
+        for(const propName in deserializedContract) {
+            if(behavior.hasOwnProperty(propName)) {
+                behavior[propName] = deserializedContract[propName];
+            }
+        }
         behavior.initAfterDeserialize();
         return behavior;
     }
@@ -48,8 +53,15 @@ export abstract class Behavior implements BehaviorContract {
     abstract execute(owner:Entity):Promise<void>
 
     async react(eventName:string, owner:Entity, ...args:any){
-        if(typeof this[`on_${eventName}`] === 'function'){
-            await this[`on_${eventName}`](owner, ...args);
+        try{
+            if(typeof this[`on_${eventName}`] === 'function'){
+                await this[`on_${eventName}`](owner, ...args);
+            }
+            if(typeof this['on_all'] === 'function') {
+                await this['on_all'](owner, ...args)
+            }
+        } catch(exception) {
+            console.error(exception);
         }
     }
 

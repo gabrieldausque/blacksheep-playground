@@ -71,6 +71,9 @@ export class Scene extends events.EventEmitter{
                     entity.emit('EventRaised', arg)
                 }
             })
+            entity.on('NextScene',() => {
+                this.emit('NextScene')
+            })
         }
     }
 

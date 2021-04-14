@@ -28,12 +28,9 @@ export class PrintBehavior extends Behavior {
         return Promise.resolve(undefined);
     }
 
-    async on_click(entity:Entity, arg:any):Promise<void>{
-        console.log('on_click');
-    }
-
-    async on_keyup(entity:Entity, arg:any):Promise<void>{
-        console.log('on_keyup');
+    async on_all(entity:Entity, arg:any):Promise<void>{
+        console.log(`on ${arg.eventName}`);
+        console.log(arg);
     }
 
 }

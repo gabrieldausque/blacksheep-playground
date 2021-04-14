@@ -56,7 +56,7 @@ export class GameEngine extends EventEmitter {
                                 encoding:'utf8'
                             }, (fileErr, data) => {
                                 if(!fileErr){
-                                    this.scenes.push(Scene.deserialize(data));
+                                    this.addScene(Scene.deserialize(data));
                                     fileReadHandler(undefined);
                                 }
                             });
@@ -111,11 +111,32 @@ export class GameEngine extends EventEmitter {
         }
     }
 
-    async getScene(sceneIndex:number):Promise<Scene> {
+    async getScene(sceneIndex:number):Promise<Scene | undefined> {
         if(sceneIndex >= 0 && sceneIndex < this.scenes.length){
-            return this.scenes[0]
+            return this.scenes[sceneIndex]
         }
-        throw new Error(`No scene with index ${sceneIndex}.`);
+        return;
     }
 
+    addScene(scene: Scene) {
+        if(!this.scenes.find(s => s.key === scene.key))
+        {
+            this.scenes.push(scene);
+            scene.on('NextScene',async () => {
+                console.log('next scene');
+                let sceneIndex = this.currentScene ?
+                    this.scenes.indexOf(this.currentScene) + 1 :
+                    0;
+                if(sceneIndex >= this.scenes.length ){
+                    sceneIndex = 0
+                }
+                const newScene = await this.getScene(sceneIndex);
+                if(newScene){
+                    this.currentScene = newScene;
+                    //TODO : add player entity from previous scene
+                    await this.server?.send('NewScene',this.currentScene);
+                }
+            })
+        }
+    }
 }

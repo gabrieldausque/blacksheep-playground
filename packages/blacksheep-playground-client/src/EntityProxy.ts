@@ -1,4 +1,5 @@
 import {GameEventEmitter} from "./GameEventEmitter";
+import {eventArgConverter} from "./EventArgConverter";
 
 export interface Component {
     contractType:string;
@@ -57,14 +58,16 @@ export class EntityProxy extends GameEventEmitter {
             document.getElementById('screen').append(sprite);
             for(const behavior of this.behaviors){
                 if(Array.isArray(behavior.reactOn)){
+                    console.log(`subscribing ${behavior.contractName} to `)
                     for(const event of behavior.reactOn){
                         const eventEmitter = event.isGlobal ? document : sprite;
                         eventEmitter.addEventListener(event.eventName, (arg) => {
                             // TODO : convert the event based on eventName
+                            console.log(`emitting ${event.eventName}`)
                             this.emit('EventRaised', {
                                 eventName: event.eventName,
                                 eventSender: this.id,
-                                args: arg
+                                args: eventArgConverter.convert(event.eventName, arg)
                             })
                         })
                     }
@@ -106,7 +109,8 @@ export class EntityProxy extends GameEventEmitter {
 
         const htmlComponent = this.components.find(c => c.contractName.toLowerCase() === 'html');
         if(htmlComponent) {
-            sprite.innerHTML = htmlComponent.content;
+            if(sprite.innerHTML !== htmlComponent.content)
+                sprite.innerHTML = htmlComponent.content;
         }
     }
 }

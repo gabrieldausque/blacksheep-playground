@@ -38,20 +38,34 @@
       ],
       "behaviors": [{
         "contractName": "Script",
-        "reactOn": ["keyup"],
+        "reactOn": [{
+          "eventName": "keyup",
+          "isGlobal": true
+        }],
         "handlers": {
           "keyup": [
-            "async (entity, arg) => {",
+            "(entity, arg) => {",
               "switch(arg.key) {",
                 "case 'Enter': {"  ,
-                  "entity.emit('NextScene');",
+                  "entity.raiseEvent('NextScene');",
                   "return;",
                 "}",
               "}",
             "}"
-          ]
+            ]
+          }
+        },
+        {
+          "contractName": "Print",
+          "reactOn": [{
+            "eventName": "keyup",
+            "isGlobal": true
+          }, {
+            "eventName": "NextScene",
+            "isGlobal": false
+          }]
         }
-      }]
+      ]
     }
   ]
 }

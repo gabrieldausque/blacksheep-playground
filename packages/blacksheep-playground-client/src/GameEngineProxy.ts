@@ -27,26 +27,10 @@ export class GameEngineProxy {
             //receive current scene state
             this.playerId = playerId;
             console.log(`Joining with player id ${playerId}`);
-            let sceneCss = <HTMLLinkElement>document.getElementById('current-scene');
-            if(!sceneCss)
-            {
-                sceneCss = <HTMLLinkElement>document.createElement('link');
-                sceneCss.id = 'current-scene';
-                sceneCss.rel = 'stylesheet';
-                document.querySelector('head').append(sceneCss);
-            }
-            if(object.key)
-                sceneCss.href = `public/${object.key}.css`;
-            //TODO : save player entity reference and reinject it in entities list
-            this.entities = [];
-            for(const entity of object.entities){
-                const e = new EntityProxy();
-                e.deserialize(entity)
-                this.entities.push(e)
-                e.on('EventRaised', async (arg) => {
-                    this.socket.emit('EventRaised',arg);
-                })
-            }
+            this.initScene(object);
+        })
+        this.socket.on('NewScene', async(scene:any) => {
+            this.initScene(scene);
         })
         this.socket.on('Update', async(event) => {
             //TODO : Update local object received, set them to dirty, for drawing them;
@@ -70,5 +54,27 @@ export class GameEngineProxy {
         });
     }
 
-
+    initScene(scene: any) {
+        let sceneCss = <HTMLLinkElement>document.getElementById('current-scene');
+        if(!sceneCss)
+        {
+            sceneCss = <HTMLLinkElement>document.createElement('link');
+            sceneCss.id = 'current-scene';
+            sceneCss.rel = 'stylesheet';
+            document.querySelector('head').append(sceneCss);
+        }
+        if(scene.key)
+            sceneCss.href = `public/${scene.key}.css`;
+        const screen = document.getElementById('screen');
+        screen.innerText = '';
+        this.entities = [];
+        for(const entity of scene.entities){
+            const e = new EntityProxy();
+            e.deserialize(entity)
+            this.entities.push(e)
+            e.on('EventRaised', async (arg) => {
+                this.socket.emit('EventRaised',arg);
+            })
+        }
+    }
 }

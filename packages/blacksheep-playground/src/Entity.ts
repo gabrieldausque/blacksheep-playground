@@ -71,8 +71,9 @@ export class Entity extends events.EventEmitter {
             this.behaviors.push(behavior);
             for(const eventListened of behavior.reactOn){
                 this.on(eventListened.eventName, (args) => {
-                    behavior.react(eventListened.eventName, this, args).catch(() => {
+                    behavior.react(eventListened.eventName, this, args).catch((e) => {
                         //do nothing
+                        console.error(e);
                     })
                 })
             }
@@ -103,5 +104,17 @@ export class Entity extends events.EventEmitter {
             toReturn.behaviors.push(behavior.serialize())
         }
         return toReturn;
+    }
+
+    raiseEvent(eventName:string, arg?:any) : boolean{
+        console.log(`entity emitting ${eventName.toString()}`)
+        if(typeof arg === 'undefined'){
+           const e = {
+               eventName: eventName
+           }
+           return super.emit(eventName, e);
+        }else {
+            return super.emit(eventName, arg)
+        }
     }
 }
