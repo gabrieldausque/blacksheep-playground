@@ -15,7 +15,7 @@
         },
         {
           "contractName": "HTML",
-          "content": "<div><div class=\"spinner\"></div><p>Loading ...</p></div>"
+          "content": "<div class=\"spinner-container\"><div class=\"spinner\"></div><p>Loading ...</p></div>"
         }
       ],
       "behaviors": []

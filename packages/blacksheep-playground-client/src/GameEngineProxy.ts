@@ -37,15 +37,15 @@ export class GameEngineProxy {
             const screen = document.getElementById('screen');
 
             if(screen){
-                const newTransform = 'scale(' + (window.innerWidth/(screen.scrollWidth)) + ')';
+                const scale = (window.innerWidth/(screen.scrollWidth));
+                const newTransform = 'scale(' + scale + ')';
                 if(screen.style.transformOrigin !== 'left center')
                     screen.style.transformOrigin = 'left center';
                 if(screen.style.transform !== newTransform)
                     screen.style.transform = newTransform
-            }
-
-            for(const e of this.entities){
-                await e.draw();
+                for(const e of this.entities){
+                    await e.draw();
+                }
             }
         });
         this.socket.on('connect',async() => {

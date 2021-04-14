@@ -1,0 +1,32 @@
+.spinner-container {
+    width: 1920px;
+    height:1080px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.spinner-container > p {
+    font-family: Menu;
+    font-size: 5vh;
+    color: white;
+}
+
+.spinner {
+    border-width: medium;
+    border-top: solid white;
+    height: 350px;
+    width: 350px;
+    border-radius: 350px;
+    animation: spinMeRound 1s linear infinite;
+}
+
+@keyframes spinMeRound {
+    0% {
+        transform:rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}

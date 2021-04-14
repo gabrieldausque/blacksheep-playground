@@ -7,6 +7,8 @@
         <link rel="stylesheet" href="public/main.css">
         <style>
             body {
+                height: 100vh;
+                width: 100vw;
                 max-height:100vh;
                 max-width:100vw;
                 overflow: hidden;
@@ -14,10 +16,11 @@
                 margin:0;
                 display: flex;
                 flex-direction: column;
+                justify-content: center;
             }
 
             #screen {
-                position: relative;
+                position: absolute;
                 background: black;
                 height:1080px;
                 width:1920px;
