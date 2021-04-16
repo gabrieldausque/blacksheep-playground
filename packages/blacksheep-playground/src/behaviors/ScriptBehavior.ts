@@ -7,7 +7,7 @@ export class ScriptBehavior extends Behavior {
         {
             contractType:'Behavior',
             contractName:'Script',
-            isShared:true
+            isShared:false
         }
     ]
 

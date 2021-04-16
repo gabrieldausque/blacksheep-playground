@@ -18,6 +18,31 @@
           "content": "<div class=\"spinner-container\"><div class=\"spinner\"></div><p>Loading ...</p></div>"
         }
       ],
+      "behaviors": [
+        {
+          "contractName": "Timer",
+          "triggerAfter": 3000,
+          "scriptToExecute": [
+            "async (entity) => {",
+            "const cssComponent = entity.getComponent('Css');",
+            "cssComponent.classes.push('hidden')",
+            "}"
+          ]
+        }
+      ]
+    },
+    {
+      "components": [
+      {
+        "contractName":"Body",
+        "position": {"x": 0, "y":0, "z":0},
+        "size": {"width":1920, "height":1080, "depth":0}
+      },
+      {
+          "contractName":"Css",
+          "classes": ["background"]
+        }
+      ],
       "behaviors": []
     }
   ]

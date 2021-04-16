@@ -1,3 +1,13 @@
+.LoadingScreen {
+    opacity: 1;
+    transition: opacity 2s linear;
+    pointer-events: none;
+}
+
+.LoadingScreen.hidden {
+    opacity: 0;
+}
+
 .spinner-container {
     width: 1920px;
     height:1080px;

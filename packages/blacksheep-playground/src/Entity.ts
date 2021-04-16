@@ -81,7 +81,7 @@ export class Entity extends events.EventEmitter {
     }
 
     hasBehavior(behavior: Behavior) {
-        return typeof this.getBehavior(behavior.contractName, behavior.contractType) !== 'undefined';
+        return behavior.notUnique || typeof this.getBehavior(behavior.contractName, behavior.contractType) !== 'undefined';
     }
 
     getBehavior<T extends Behavior = Behavior>(name: string, type: string = 'Behavior'): T | undefined {

@@ -42,12 +42,13 @@ export abstract class Behavior implements BehaviorContract {
     contractType:string;
     contractName:string;
     reactOn:EventDescriptor[];
+    notUnique:boolean;
 
     protected constructor(metadata:ExportMetadata, reactOn:EventDescriptor[] = []) {
         this.contractType = metadata.contractType;
         this.contractName = metadata.contractName;
         this.reactOn = reactOn
-
+        this.notUnique = false;
     }
 
     abstract execute(owner:Entity):Promise<void>

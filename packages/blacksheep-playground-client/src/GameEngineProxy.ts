@@ -43,6 +43,7 @@ export class GameEngineProxy {
                     screen.style.transformOrigin = 'left center';
                 if(screen.style.transform !== newTransform)
                     screen.style.transform = newTransform
+                await this.updateScene(event.scene)
                 for(const e of this.entities){
                     await e.draw();
                 }
@@ -52,6 +53,16 @@ export class GameEngineProxy {
             this.socket.emit('Join', this.gameId);
             console.log('connection to game engine done');
         });
+    }
+
+    async updateScene(scene){
+        for(const entity of scene.entities){
+            let existingEntity = this.entities.find(e => e.id === entity.id);
+            if(!existingEntity){
+                existingEntity = this.createEntityProxy(entity);
+            }
+            await existingEntity.update(entity);
+        }
     }
 
     initScene(scene: any) {
@@ -69,12 +80,17 @@ export class GameEngineProxy {
         screen.innerText = '';
         this.entities = [];
         for(const entity of scene.entities){
-            const e = new EntityProxy();
-            e.deserialize(entity)
-            this.entities.push(e)
-            e.on('EventRaised', async (arg) => {
-                this.socket.emit('EventRaised',arg);
-            })
+            this.createEntityProxy(entity);
         }
+    }
+
+    createEntityProxy(entity: EntityProxy) {
+        const e = new EntityProxy();
+        e.deserialize(entity)
+        this.entities.push(e)
+        e.on('EventRaised', async (arg) => {
+            this.socket.emit('EventRaised', arg);
+        })
+        return e;
     }
 }

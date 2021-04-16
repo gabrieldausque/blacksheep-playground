@@ -13,7 +13,7 @@ export class CSSComponent extends EntityComponent {
 
     constructor() {
         super(CSSComponent.metadata[0]);
-        this.classes = []
+        this.classes = [];
     }
     
 }
