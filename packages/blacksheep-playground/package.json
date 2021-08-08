@@ -4,10 +4,10 @@
   "description": "A game engine in full typescript",
   "main": "dist/index.js",
   "scripts": {
-    "compile": "shx rm -rf ./dist && ./node_modules/.bin/tsc",
+    "compile": "node_modules/.bin/tsc",
     "test": "npm run compile && npm run mocha",
     "mocha": "mocha --require ts-node/register test/**/*.test.ts --exit",
-    "copy-client": "shx mkdir ./dist/client && shx cp ./node_modules/@blacksheep/playground-client/dist/blacksheep-playground-client.js* ./dist/client",
+    "copy-client": "shx mkdir -p ./dist/client && shx cp ./node_modules/@blacksheep/playground-client/dist/blacksheep-playground-client.js* ./dist/client",
     "build": "npm run compile && shx cp -rf ./src/screen ./dist && npm run copy-client"
   },
   "dependencies": {

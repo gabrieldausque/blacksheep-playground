@@ -6,3 +6,4 @@ dist/
 obj/
 /lerna-debug.log
 .idea
+/package.json.lerna_backup

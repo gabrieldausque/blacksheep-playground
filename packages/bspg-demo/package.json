@@ -4,7 +4,7 @@
   "description": "The demo application for blacksheep playground",
   "main": "index.js",
   "scripts": {
-    "compile": "shx rm -rf dist && node_modules/.bin/tsc",
+    "compile": "node_modules/.bin/tsc",
     "build": "npm run compile",
     "start": "npm run build && node dist/index.js"
   },

@@ -4,7 +4,7 @@
   "description": "The client side of the blacksheep playground game engine",
   "main": "dist/blacksheep-playground-client.js",
   "scripts": {
-    "compile": "shx rm -rf dist && node_modules/.bin/tsc",
+    "compile": "node_modules/.bin/tsc",
     "build": "npm run compile && webpack"
   },
   "author": "gabrieldausque.pro@gmail.com",
