@@ -54,7 +54,7 @@ public class GameLoop
         {
             lock (_lockObject)
             {
-                if (_isRunning)
+                if (!_isRunning)
                 {
                     _isRunning = true;
                     RunGameFrame().ContinueWith((t) =>
