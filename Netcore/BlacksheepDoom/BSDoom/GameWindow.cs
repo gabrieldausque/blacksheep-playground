@@ -18,16 +18,39 @@ namespace BSDoom
         private readonly GameLoop _gameLoop;
         private int _frameCountPerSecond = 0;
         private DateTime _lastMeasuringFrame = DateTime.Now;
-        
+        private GameObject _pov;
+        private GameObject _screen;
+        private GameObject _firstObject;
+
+
+        //TODO : inject the game loop
         public GameWindow()
         {
             InitializeComponent();
             _gameLoop = new GameLoop(60);
             this.Paint += GameWindow_Paint;
             this.Closing += GameWindow_Closing;
+            _gameLoop.Init += _gameLoop_Init;
             _gameLoop.Draw += _gameLoop_Draw;
             _gameLoop.Update += _gameLoop_Update;
             _gameLoop.Start();
+        }
+
+        private void _gameLoop_Init(object? sender, EventArgs e)
+        {
+            //TODO : at the end, load a file that will describe the complete game 
+            //TODO : add the first game object, a simple square
+            _pov = new GameObject();
+            _pov.Components.Add(new PositionComponent(512, 384, 384));
+
+            _screen = new GameObject();
+            _screen.Components.Add(new PositionComponent(0,0,0));
+            _screen.Components.Add(new BodyComponent(1024,768,0));
+
+            _firstObject = new GameObject();
+            _firstObject.Components.Add(new PositionComponent(256, 192, 0));
+            _firstObject.Components.Add(new BodyComponent(512, 384, 0));
+            _firstObject.Components.Add(new ColorComponent(Color.Red));
         }
 
         private void _gameLoop_Update(object? sender, EventArgs e)
@@ -104,12 +127,20 @@ namespace BSDoom
 
         private void DrawBitmap()
         {
-            var bitmapToDraw = new Bitmap(200, 200, PixelFormat.Format24bppRgb);
-            byte[] imageData = new byte[200 * 200 *3]; //you image data here
-            Parallel.For(0, imageData.Length, (index) =>
+            var screenPosition = _screen.Components.First(c => c is PositionComponent) as PositionComponent;
+            var screenBody = _screen.Components.First(c => c is BodyComponent) as BodyComponent;
+
+            var bitmapToDraw = new Bitmap(screenBody.Width, screenBody.Height, PixelFormat.Format32bppArgb);
+            byte[] imageData = new byte[screenBody.Width * screenBody.Height * 4]; //you image data here
+            Parallel.For(screenPosition.Y, screenPosition.Y + screenBody.Height, (index) =>
             {
-                if(index % 3 == 2)
-                    imageData[index] = 255;
+                for (int x = screenPosition.X; x < screenPosition.X + screenBody.Width; x++)
+                {
+                    //Calcul de la droite entre l'observateur et le point de l'écran en cours
+
+                    //Calcul de l'intersection avec chaque objet devant l'observateur
+                    //Si intersection : calcul de la couleur du point
+                }
             });
             
             BitmapData bmData = bitmapToDraw.LockBits(new System.Drawing.Rectangle(0, 0,
@@ -124,5 +155,47 @@ namespace BSDoom
             //g.DrawImage(_bitmap, 0,0,Width, Height);
         }
 
+    }
+
+    public class ColorComponent : GameComponent
+    {
+        public Color Color { get; set; }
+
+        public ColorComponent(Color color)
+        {
+            Color = color;
+        }
+    }
+
+    public class BodyComponent : GameComponent
+    {
+        public BodyComponent(int width, int height, int depth)
+        {
+            Width = width;
+            Height = height;
+            Depth = depth;
+        }
+
+        public int Depth { get; set; }
+
+        public int Height { get; set; }
+
+        public int Width { get; set; }
+    }
+
+    public class PositionComponent : GameComponent
+    {
+        public PositionComponent(int x, int y, int z)
+        {
+            X = x;
+            Y = y;
+            Z = z;
+        }
+
+        public int Z { get; set; }
+
+        public int Y { get; set; }
+
+        public int X { get; set; }
     }
 }

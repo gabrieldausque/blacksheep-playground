@@ -49,7 +49,6 @@ public class GameLoop
     {
         await RaiseInitEvent();
 
-
         _internalTimer = new Timer(state =>
         {
             lock (_lockObject)
