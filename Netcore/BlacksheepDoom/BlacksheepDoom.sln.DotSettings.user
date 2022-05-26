@@ -1,0 +1,8 @@
+﻿<wpf:ResourceDictionary xml:space="preserve" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:s="clr-namespace:System;assembly=mscorlib" xmlns:ss="urn:shemas-jetbrains-com:settings-storage-xaml" xmlns:wpf="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=d6e3bdc9_002D3505_002D4d82_002Db0cc_002D38a6b89c621d/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="Should_Check_if_a_point_is_in_a_line" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
+  &lt;TestAncestor&gt;&#xD;
+    &lt;TestId&gt;NUnit3x::A5FF52DC-76C1-4996-91E3-C74677A64F3D::net6.0-windows7.0::BsDoomTests.MathExtensionsTests.Should_Check_if_a_point_is_in_a_line&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;NUnit3x::A5FF52DC-76C1-4996-91E3-C74677A64F3D::net6.0-windows7.0::BsDoomTests.MathExtensionsTests.Test_Multiply_Speed&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;NUnit3x::A5FF52DC-76C1-4996-91E3-C74677A64F3D::net6.0-windows7.0::BsDoomTests.MathExtensionsTests.Should_check_if_a_point_is_in_a_plan&lt;/TestId&gt;&#xD;
+  &lt;/TestAncestor&gt;&#xD;
+&lt;/SessionState&gt;</s:String></wpf:ResourceDictionary>

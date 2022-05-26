@@ -40,13 +40,16 @@ namespace BSDoom
         {
             //TODO : at the end, load a file that will describe the complete game 
             //TODO : add the first game object, a simple square
+            //The camera :
             _pov = new GameObject();
-            _pov.Components.Add(new PositionComponent(512, 384, 384));
+            var povZ = (int)Math.Sqrt(MathExtensions.Square(512) / (Math.Cos(60) - 1));
+            _pov.Components.Add(new PositionComponent(512, 384, povZ));
 
             _screen = new GameObject();
             _screen.Components.Add(new PositionComponent(0,0,0));
             _screen.Components.Add(new BodyComponent(1024,768,0));
 
+            //the Object
             _firstObject = new GameObject();
             _firstObject.Components.Add(new PositionComponent(256, 192, 0));
             _firstObject.Components.Add(new BodyComponent(512, 384, 0));
@@ -137,7 +140,6 @@ namespace BSDoom
                 for (int x = screenPosition.X; x < screenPosition.X + screenBody.Width; x++)
                 {
                     //Calcul de la droite entre l'observateur et le point de l'écran en cours
-
                     //Calcul de l'intersection avec chaque objet devant l'observateur
                     //Si intersection : calcul de la couleur du point
                 }
