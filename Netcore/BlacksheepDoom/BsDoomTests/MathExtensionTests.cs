@@ -27,5 +27,34 @@ namespace BsDoomTests
             var thePoint = new Point(5, 15, 0);
             Assert.IsTrue(thePlane.Contains(thePoint));
         }
+
+        [Test]
+        public void Should_check_if_unitary_vector_is_orthogonal_to_others()
+        {
+            var xVector = new Vector(1, 0, 0);
+            var yVector = new Vector(0, 1, 0);
+            var zVector = new Vector(0, 0, 1);
+            Assert.That(xVector^yVector, Is.EqualTo(zVector));
+            Assert.That(yVector^zVector, Is.EqualTo(xVector));
+            Assert.That(zVector^xVector, Is.EqualTo(yVector));
+        }
+
+        [Test]
+        public void Should_calculate_intersection_point_of_plan_and_a_line()
+        {
+            var plan = new Plan(new Point(0, 0, 0), new Vector(0,0,1));
+            var line = new Line(new Point(3, 3, 3), new Vector(0, 0, 3));
+            var expected = new Point(3, 3, 0);
+            Assert.That(Geometry.GetIntersection(line, plan), Is.EqualTo(expected));
+            plan = new Plan(new Point(0, 0, 0), new Vector(1, 0, 0));
+            line = new Line(new Point(3, 3, 3), new Vector(3, 0, 0));
+            expected = new Point(0, 3, 3);
+            Assert.That(Geometry.GetIntersection(line, plan), Is.EqualTo(expected));
+            plan = new Plan(new Point(0, 0, 0), new Vector(0, 1, 0));
+            line = new Line(new Point(3, 3, 3), new Vector(0, 3, 0));
+            expected = new Point(3, 0, 3);
+            Assert.That(Geometry.GetIntersection(line, plan), Is.EqualTo(expected));
+        }
+        
     }
 }
