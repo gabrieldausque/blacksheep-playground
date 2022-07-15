@@ -54,7 +54,30 @@ namespace BsDoomTests
             line = new Line(new Point(3, 3, 3), new Vector(0, 3, 0));
             expected = new Point(3, 0, 3);
             Assert.That(Geometry.GetIntersection(line, plan), Is.EqualTo(expected));
+            plan = new Plan(new Point(0, 0, 0), new Vector(1, 1, 1));
+            line = new Line(new Point(3, 3, 3), new Vector(3, 3, 3));
+
         }
-        
+
+        [Test]
+        [TestCase(2,4,0, true)]
+        [TestCase(7,4,0, false)]
+        [TestCase(2,4,1, false)]
+        public void Should_say_that_point_is_in_square(int x, int y, int z, bool result)
+        {
+            var quadrilatere = new Quadrilateral(new Point(0, 3, 0), new Vector(3, 0, 0), new Vector(0, 3, 0));
+            var point = new Point(x, y, z);
+            var not = result ? string.Empty: "not";
+            Assert.That(quadrilatere.Contains(point), result?Is.True:Is.False,$"Point should {not} be in square");
+        }
+
+        [Test]
+        public async Task Should_say_if_intersection_of_plan_and_line_is_in_square()
+        {
+            var quadrilatere = new Quadrilateral(new Point(0, 3, 0), new Vector(3,0,0), new Vector(0,3,0));
+            var line = new Line(new Point(2, 4, 2), new Vector(0, 0, 3));
+            Assert.That(line.HasIntersection(quadrilatere));
+        }
+
     }
 }
